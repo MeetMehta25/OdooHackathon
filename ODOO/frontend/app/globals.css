@@ -4,82 +4,90 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* StockMaster White & Purple Theme with Dark Purple Text */
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.25 0.15 280);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.15 280);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.15 280);
-  --primary: oklch(0.55 0.2 280);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.01 280);
-  --secondary-foreground: oklch(0.25 0.15 280);
-  --muted: oklch(0.95 0.01 280);
-  --muted-foreground: oklch(0.4 0.1 280);
-  --accent: oklch(0.6 0.18 280);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.62 0.22 25.3);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.9 0.02 280);
-  --input: oklch(0.98 0.01 280);
-  --ring: oklch(0.55 0.2 280);
-  --chart-1: oklch(0.55 0.2 280);
-  --chart-2: oklch(0.65 0.15 300);
-  --chart-3: oklch(0.5 0.18 260);
-  --chart-4: oklch(0.6 0.2 270);
-  --chart-5: oklch(0.7 0.15 290);
+  /* StockMaster Ivory & Purple Theme */
+  --background: #FFFEF8; /* Ivory background */
+  --foreground: #9B7EDE; /* Light purple/lavender for regular text */
+  --card: #fcfcf9; /* Ivory cards */
+  --card-foreground: #9B7EDE; /* Light purple text on cards */
+  --popover: #fad921; /* Ivory popovers */
+  --popover-foreground: #9B7EDE; /* Light purple text */
+  --primary: #7B2CBF; /* Purple for primary elements */
+  --primary-foreground: #f9f9dc; /* Ivory text on purple */
+  --secondary: #a859fe; /* Light beige/ivory variant */
+  --secondary-foreground: #9B7EDE; /* Light purple text */
+  --muted: #d493f8; /* Light muted background */
+  --muted-foreground: #8B6FC7; /* Darker purple for muted text - more visible */
+  --accent: #9B59B6; /* Purple accent */
+  --accent-foreground: #c241f1; /* Ivory text on accent */
+  --destructive: #9D0104; /* Red for destructive actions */
+  --destructive-foreground: #FFFEF8; /* Ivory text on red */
+  --border: transparent; /* No borders */
+  --input: #ffe44b; /* Ivory input background */
+  --ring: #7B2CBF; /* Purple focus ring */
+  --chart-1: #cf0508; /* Chart color 1 - Red */
+  --chart-2: #55adec; /* Chart color 2 - Blue */
+  --chart-3: #9D0104; /* Chart color 3 - Red */
+  --chart-4: #4181AE; /* Chart color 4 - Blue */
+  --chart-5: #9D0104; /* Chart color 5 - Red */
   --radius: 0.375rem;
-  --sidebar: oklch(0.98 0.01 280);
-  --sidebar-foreground: oklch(0.25 0.15 280);
-  --sidebar-primary: oklch(0.55 0.2 280);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.95 0.02 280);
-  --sidebar-accent-foreground: oklch(0.25 0.15 280);
-  --sidebar-border: oklch(0.9 0.02 280);
-  --sidebar-ring: oklch(0.55 0.2 280);
+  --sidebar: #FFFEF8; /* Ivory sidebar */
+  --sidebar-foreground: #9B7EDE; /* Light purple sidebar text */
+  --sidebar-primary: #7B2CBF; /* Purple sidebar primary */
+  --sidebar-primary-foreground: #FFFEF8; /* Ivory text on purple */
+  --sidebar-accent: #F5F5DC; /* Light sidebar accent */
+  --sidebar-accent-foreground: #9B7EDE; /* Light purple text */
+  --sidebar-border: transparent; /* No sidebar border */
+  --sidebar-ring: #7B2CBF; /* Purple sidebar ring */
 
   /* StockMaster Custom Colors */
-  --color-success: oklch(0.65 0.16 142);
-  --color-warning: oklch(0.75 0.16 69);
-  --color-info: oklch(0.55 0.2 280);
-  --color-error: oklch(0.62 0.22 25.3);
+  --color-success: #9B7EDE; /* Purple for success */
+  --color-warning: #D4A574; /* Warm beige for warning */
+  --color-info: #4181AE; /* Blue for info */
+  --color-error: #9D0104; /* Red for error */
+  
+  /* Heading color - Purple */
+  --heading-color: #7B2CBF;
 }
 
 .dark {
-  /* Dark mode also uses white & purple theme */
-  --background: oklch(0.08 0.02 280);
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.12 0.02 280);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.12 0.02 280);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.65 0.2 280);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.18 0.02 280);
-  --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.15 0.02 280);
-  --muted-foreground: oklch(0.65 0.05 280);
-  --accent: oklch(0.6 0.18 280);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.62 0.22 25.3);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.2 0.02 280);
-  --input: oklch(0.12 0.02 280);
-  --ring: oklch(0.65 0.2 280);
-  --chart-1: oklch(0.65 0.2 280);
-  --chart-2: oklch(0.7 0.18 300);
-  --chart-3: oklch(0.6 0.2 260);
-  --chart-4: oklch(0.65 0.2 270);
-  --chart-5: oklch(0.75 0.18 290);
-  --sidebar: oklch(0.1 0.02 280);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.65 0.2 280);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.18 0.02 280);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(0.2 0.02 280);
-  --sidebar-ring: oklch(0.65 0.2 280);
+  /* Dark mode - keeping same ivory theme for consistency */
+  --background: #FFFEF8;
+  --foreground: #9B7EDE;
+  --card: #FFFEF8;
+  --card-foreground: #9B7EDE;
+  --popover: #FFFEF8;
+  --popover-foreground: #9B7EDE;
+  --primary: #7B2CBF;
+  --primary-foreground: #FFFEF8;
+  --secondary: #F5F5DC;
+  --secondary-foreground: #9B7EDE;
+  --muted: #F5F5DC;
+  --muted-foreground: #8B6FC7;
+  --accent: #9B59B6;
+  --accent-foreground: #FFFEF8;
+  --destructive: #9D0104;
+  --destructive-foreground: #FFFEF8;
+  --border: transparent;
+  --input: #FFFEF8;
+  --ring: #7B2CBF;
+  --chart-1: #f41a1d;
+  --chart-2: #52b0f3;
+  --chart-3: #9D0104;
+  --chart-4: #4181AE;
+  --chart-5: #9D0104;
+  --sidebar: #FFFEF8;
+  --sidebar-foreground: #9B7EDE;
+  --sidebar-primary: #7B2CBF;
+  --sidebar-primary-foreground: #FFFEF8;
+  --sidebar-accent: #F5F5DC;
+  --sidebar-accent-foreground: #9B7EDE;
+  --sidebar-border: transparent;
+  --sidebar-ring: #7B2CBF;
+  --color-success: #9B7EDE;
+  --color-warning: #D4A574;
+  --color-info: #4181AE;
+  --color-error: #9D0104;
+  --heading-color: #7B2CBF;
 }
 
 @theme inline {
@@ -125,6 +133,7 @@
   --color-warning: var(--color-warning);
   --color-info: var(--color-info);
   --color-error: var(--color-error);
+  --color-heading: var(--heading-color);
 }
 
 @layer base {
@@ -135,12 +144,36 @@
     @apply bg-background text-foreground;
   }
 
+  /* Headings - Purple color (override any other color classes) */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--heading-color) !important;
+  }
+  
+  /* Large text sizes used for headings - Purple */
+  h1.text-xl, h1.text-2xl, h1.text-3xl, h1.text-4xl, h1.text-5xl, h1.text-6xl,
+  h2.text-xl, h2.text-2xl, h2.text-3xl, h2.text-4xl, h2.text-5xl, h2.text-6xl,
+  h3.text-xl, h3.text-2xl, h3.text-3xl, h3.text-4xl, h3.text-5xl, h3.text-6xl {
+    color: var(--heading-color) !important;
+  }
+  
+  /* Standalone large text that are likely headings */
+  .text-xl.font-bold, .text-2xl.font-bold, .text-3xl.font-bold, 
+  .text-4xl.font-bold, .text-5xl.font-bold, .text-6xl.font-bold {
+    color: var(--heading-color) !important;
+  }
+  
+  /* Override text-foreground on headings */
+  h1.text-foreground, h2.text-foreground, h3.text-foreground,
+  h4.text-foreground, h5.text-foreground, h6.text-foreground {
+    color: var(--heading-color) !important;
+  }
+
   /* Added StockMaster component styles */
   input,
   textarea,
   select {
-    @apply bg-card border border-border text-foreground;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply bg-card border-0 text-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary;
   }
 
   button {
@@ -150,13 +183,13 @@
 
 @layer components {
   .input-field {
-    @apply bg-card border border-border text-foreground rounded-md px-3 py-2 text-sm;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply bg-card border-0 text-foreground rounded-md px-3 py-2 text-sm;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary;
     @apply placeholder:text-muted-foreground;
   }
 
   .card {
-    @apply bg-card border border-border rounded-lg p-6;
+    @apply bg-card border-0 rounded-lg p-6;
   }
 
   .btn-primary {
@@ -164,7 +197,7 @@
   }
 
   .btn-secondary {
-    @apply bg-card border border-border text-foreground hover:bg-secondary font-medium py-2 px-4 rounded-md;
+    @apply bg-card border-0 text-foreground hover:bg-secondary font-medium py-2 px-4 rounded-md;
   }
 
   .muted-bg {

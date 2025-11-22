@@ -1,6 +1,8 @@
 "use client"
 
 export function StockChart() {
+  const chartColors = ["#9D0104", "#4181AE"]
+  
   return (
     <div className="card">
       <h2 className="text-xl font-bold mb-6">Stock Movement (24h)</h2>
@@ -8,8 +10,11 @@ export function StockChart() {
         {[45, 62, 38, 71, 54, 89, 45, 62, 55, 48, 72, 65].map((height, i) => (
           <div
             key={i}
-            className="flex-1 bg-gradient-to-t from-primary to-primary/60 rounded-t opacity-80 hover:opacity-100 transition-opacity"
-            style={{ height: `${(height / 100) * 100}%` }}
+            className="flex-1 rounded-t opacity-80 hover:opacity-100 transition-opacity"
+            style={{ 
+              height: `${(height / 100) * 100}%`,
+              background: `linear-gradient(to top, ${chartColors[i % 2]}, ${chartColors[i % 2]}CC)`
+            }}
           />
         ))}
       </div>
