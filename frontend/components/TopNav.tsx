@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useAuthStore } from "@/lib/auth-store"
-import { BarChart3, Package, Warehouse, TrendingUp, FileText, Users, Settings, LogOut, Menu, X } from "lucide-react"
+import { hasPermission } from "@/lib/permissions"
+import { BarChart3, Package, Warehouse, TrendingUp, FileText, Users, Settings, LogOut, Menu, X, ArrowLeftRight, PackageSearch, ClipboardCheck } from "lucide-react"
 import { useState } from "react"
 
 export function TopNav() {
@@ -18,22 +19,24 @@ export function TopNav() {
   }
 
   const menuItems = [
-    { href: "/dashboard", label: "Dashboard", icon: BarChart3, all: true },
-    { href: "/products", label: "Products", icon: Package, all: true },
-    { href: "/warehouses", label: "Warehouses", icon: Warehouse, all: true },
-    { href: "/inventory", label: "Inventory", icon: TrendingUp, all: true },
-    { href: "/receipts", label: "Receipts", icon: FileText, all: true },
-    { href: "/deliveries", label: "Deliveries", icon: FileText, all: true },
-    { href: "/ledger", label: "Stock Ledger", icon: TrendingUp, all: true },
-    { href: "/alerts", label: "Alerts", icon: BarChart3, all: true },
-    { href: "/users", label: "Users", icon: Users, admin: true },
-    { href: "/settings", label: "Settings", icon: Settings, all: true },
+    { href: "/dashboard", label: "Dashboard", icon: BarChart3, permission: "view_dashboard" },
+    { href: "/products", label: "Products", icon: Package, permission: "view_products" },
+    { href: "/warehouses", label: "Warehouses", icon: Warehouse, permission: "view_warehouses" },
+    { href: "/inventory", label: "Inventory", icon: TrendingUp, permission: "view_inventory" },
+    { href: "/receipts", label: "Receipts", icon: FileText, permission: "view_receipts" },
+    { href: "/deliveries", label: "Deliveries", icon: FileText, permission: "view_deliveries" },
+    { href: "/transfers", label: "Transfers", icon: ArrowLeftRight, permission: "view_transfers" },
+    { href: "/picking", label: "Picking", icon: PackageSearch, permission: "perform_picking" },
+    { href: "/counting", label: "Counting", icon: ClipboardCheck, permission: "perform_counting" },
+    { href: "/ledger", label: "Stock Ledger", icon: TrendingUp, permission: "view_ledger" },
+    { href: "/alerts", label: "Alerts", icon: BarChart3, permission: "view_alerts" },
+    { href: "/users", label: "Users", icon: Users, permission: "manage_users" },
+    { href: "/settings", label: "Settings", icon: Settings, permission: "view_dashboard" },
   ]
 
   const visibleItems = menuItems.filter((item) => {
-    if (item.all) return true
-    if (item.admin && user?.role === "admin") return true
-    return false
+    if (!user) return false
+    return hasPermission(user.role, item.permission as any)
   })
 
   return (
@@ -68,19 +71,21 @@ export function TopNav() {
           </div>
 
           {/* Right Side - User Info & Logout (Desktop) */}
-          <div className="hidden lg:flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm font-medium text-foreground">{user?.name}</p>
-              <p className="text-xs text-muted capitalize">{user?.role.replace("_", " ")}</p>
+          {user && (
+            <div className="hidden lg:flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-sm font-medium text-foreground">{user.name}</p>
+                <p className="text-xs text-muted capitalize">{user.role.replace("_", " ")}</p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-foreground hover:bg-muted-bg transition-colors"
+              >
+                <LogOut size={18} />
+                <span className="text-sm font-medium">Logout</span>
+              </button>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-foreground hover:bg-muted-bg transition-colors"
-            >
-              <LogOut size={18} />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
-          </div>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button
@@ -99,10 +104,12 @@ export function TopNav() {
         >
           <div className="px-4 py-4 border-t border-card-border bg-card">
             {/* User Info Mobile */}
-            <div className="px-3 py-2 mb-3 border-b border-card-border">
-              <p className="text-sm font-medium text-foreground">{user?.name}</p>
-              <p className="text-xs text-muted capitalize">{user?.role.replace("_", " ")}</p>
-            </div>
+            {user && (
+              <div className="px-3 py-2 mb-3 border-b border-card-border">
+                <p className="text-sm font-medium text-foreground">{user.name}</p>
+                <p className="text-xs text-muted capitalize">{user.role.replace("_", " ")}</p>
+              </div>
+            )}
 
             {/* Mobile Navigation */}
             <nav className="space-y-1">

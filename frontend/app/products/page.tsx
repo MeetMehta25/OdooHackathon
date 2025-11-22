@@ -6,8 +6,15 @@ import { ProductForm } from "@/components/products/product-form"
 import { DataTable } from "@/components/ui/data-table"
 import { columns, Product } from "@/components/products/columns"
 import { Plus, Search } from "lucide-react"
+import { useAuthStore } from "@/lib/auth-store"
+import { hasPermission } from "@/lib/permissions"
 
 export default function ProductsPage() {
+  const { user } = useAuthStore()
+  const canCreate = hasPermission(user?.role, "create_products")
+  const canEdit = hasPermission(user?.role, "edit_products")
+  const canDelete = hasPermission(user?.role, "delete_products")
+
   const [products, setProducts] = useState<Product[]>([
     {
       id: 1,
@@ -115,8 +122,8 @@ export default function ProductsPage() {
 
   const columnsWithHandlers = columns({
     onView: handleView,
-    onEdit: handleEdit,
-    onDelete: handleDelete,
+    onEdit: canEdit ? handleEdit : undefined,
+    onDelete: canDelete ? handleDelete : undefined,
   })
 
   return (
@@ -130,10 +137,12 @@ export default function ProductsPage() {
               <h1 className="text-4xl font-bold text-foreground">Products</h1>
               <p className="text-muted mt-2">Manage your product catalog</p>
             </div>
-            <button onClick={handleNewProduct} className="btn-primary flex items-center gap-2 w-fit">
-              <Plus size={20} />
-              Add Product
-            </button>
+            {canCreate && (
+              <button onClick={handleNewProduct} className="btn-primary flex items-center gap-2 w-fit">
+                <Plus size={20} />
+                Add Product
+              </button>
+            )}
           </div>
 
           {/* Product Form */}

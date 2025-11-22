@@ -6,8 +6,15 @@ import { Plus, Search } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns, Receipt } from "@/components/receipts/columns"
 import { ReceiptForm } from "@/components/receipts/receipt-form"
+import { useAuthStore } from "@/lib/auth-store"
+import { hasPermission } from "@/lib/permissions"
 
 export default function ReceiptsPage() {
+  const { user } = useAuthStore()
+  const canCreate = hasPermission(user?.role, "create_receipts")
+  const canEdit = hasPermission(user?.role, "edit_receipts")
+  const canDelete = hasPermission(user?.role, "delete_receipts")
+
   const [receipts, setReceipts] = useState<Receipt[]>([
     {
       id: "1",
@@ -118,8 +125,8 @@ export default function ReceiptsPage() {
 
   const columnsWithHandlers = columns({
     onView: handleView,
-    onEdit: handleEdit,
-    onDelete: handleDelete,
+    onEdit: canEdit ? handleEdit : undefined,
+    onDelete: canDelete ? handleDelete : undefined,
   })
 
   return (
@@ -133,10 +140,12 @@ export default function ReceiptsPage() {
               <h1 className="text-4xl font-bold text-foreground">Receipts</h1>
               <p className="text-muted mt-2">Manage inbound stock receipts from suppliers</p>
             </div>
-            <button onClick={handleNewReceipt} className="btn-primary flex items-center gap-2 w-fit">
-              <Plus size={20} />
-              New Receipt
-            </button>
+              {canCreate && (
+                <button onClick={handleNewReceipt} className="btn-primary flex items-center gap-2 w-fit">
+                  <Plus size={20} />
+                  New Receipt
+                </button>
+              )}
           </div>
 
           {/* Filters */}

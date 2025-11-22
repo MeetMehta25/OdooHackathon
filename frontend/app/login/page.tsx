@@ -22,10 +22,45 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const response = await apiClient.login(email, password)
-      const { token, user } = response.data
-      setAuth(user, token)
-      router.push("/dashboard")
+      // Mock login for testing - admin/admin
+      if (email.toLowerCase() === "admin" && password === "admin") {
+        const mockUser = {
+          id: "1",
+          email: "admin@stockmaster.com",
+          name: "Admin User",
+          role: "admin" as const,
+          createdAt: new Date().toISOString(),
+        }
+        const mockToken = "mock-jwt-token-" + Date.now()
+        setAuth(mockUser, mockToken)
+        router.push("/dashboard")
+        return
+      }
+
+      // Mock login for testing - warehouse/warehouse (warehouse staff)
+      if (email.toLowerCase() === "warehouse" && password === "warehouse") {
+        const mockUser = {
+          id: "2",
+          email: "warehouse@stockmaster.com",
+          name: "Warehouse Staff",
+          role: "warehouse_staff" as const,
+          createdAt: new Date().toISOString(),
+        }
+        const mockToken = "mock-jwt-token-warehouse-" + Date.now()
+        setAuth(mockUser, mockToken)
+        router.push("/dashboard")
+        return
+      }
+
+      // Try API login for other users
+      try {
+        const response = await apiClient.login(email, password)
+        const { token, user } = response.data
+        setAuth(user, token)
+        router.push("/dashboard")
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Login failed. Try admin/admin or warehouse/warehouse for testing.")
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed")
     } finally {
@@ -39,6 +74,22 @@ export default function LoginPage() {
         <div className="card">
           <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">Welcome to StockMaster</h1>
           <p className="text-muted mb-8">Manage your inventory with precision</p>
+          
+          <div className="mb-4 space-y-3">
+            <div className="p-3 bg-info/10 border border-info/20 rounded-md text-sm">
+              <p className="font-medium text-info mb-2">Test Credentials:</p>
+              <div className="space-y-1">
+                <div>
+                  <p className="text-muted text-xs mb-1">Admin (Full Access):</p>
+                  <p className="text-muted">Username: <span className="font-mono">admin</span> | Password: <span className="font-mono">admin</span></p>
+                </div>
+                <div className="pt-2 border-t border-info/20">
+                  <p className="text-muted text-xs mb-1">Warehouse Staff (Limited Access):</p>
+                  <p className="text-muted">Username: <span className="font-mono">warehouse</span> | Password: <span className="font-mono">warehouse</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
@@ -46,12 +97,12 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium mb-2">Email or Username</label>
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="admin / warehouse (for testing) or you@example.com"
                 className="input-field w-full"
                 required
               />

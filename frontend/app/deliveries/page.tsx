@@ -7,8 +7,15 @@ import { Plus, Search } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns, Delivery } from "@/components/deliveries/columns"
 import { DeliveryForm } from "@/components/deliveries/delivery-form"
+import { useAuthStore } from "@/lib/auth-store"
+import { hasPermission } from "@/lib/permissions"
 
 export default function DeliveriesPage() {
+  const { user } = useAuthStore()
+  const canCreate = hasPermission(user?.role, "create_deliveries")
+  const canEdit = hasPermission(user?.role, "edit_deliveries")
+  const canDelete = hasPermission(user?.role, "delete_deliveries")
+
   const [deliveries, setDeliveries] = useState<Delivery[]>([
     {
       id: "1",
@@ -122,8 +129,8 @@ export default function DeliveriesPage() {
   // Create columns with handlers
   const columnsWithHandlers = columns({
     onView: handleView,
-    onEdit: handleEdit,
-    onDelete: handleDelete,
+    onEdit: canEdit ? handleEdit : undefined,
+    onDelete: canDelete ? handleDelete : undefined,
   })
 
   return (
@@ -138,10 +145,12 @@ export default function DeliveriesPage() {
               <h1 className="text-4xl font-bold text-foreground">Deliveries</h1>
               <p className="text-muted mt-2">Manage outbound stock deliveries to customers</p>
             </div>
-            <button onClick={handleNewDelivery} className="btn-primary flex items-center gap-2 w-fit">
-              <Plus size={20} />
-              New Delivery
-            </button>
+            {canCreate && (
+              <button onClick={handleNewDelivery} className="btn-primary flex items-center gap-2 w-fit">
+                <Plus size={20} />
+                New Delivery
+              </button>
+            )}
           </div>
 
           {/* Filters */}

@@ -6,8 +6,13 @@ import { Search, Download, Plus } from "lucide-react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns, InventoryItem } from "@/components/inventory/columns"
 import { InventoryForm } from "@/components/inventory/inventory-form"
+import { useAuthStore } from "@/lib/auth-store"
+import { hasPermission } from "@/lib/permissions"
 
 export default function InventoryPage() {
+  const { user } = useAuthStore()
+  const canAdjust = hasPermission(user?.role, "adjust_inventory")
+
   const [inventory, setInventory] = useState<InventoryItem[]>([
     {
       id: "1",
@@ -131,10 +136,12 @@ export default function InventoryPage() {
                 <Download size={20} />
                 Export
               </button>
-              <button onClick={handleAdjustStock} className="btn-primary flex items-center gap-2">
-                <Plus size={20} />
-                Adjust Stock
-              </button>
+              {canAdjust && (
+                <button onClick={handleAdjustStock} className="btn-primary flex items-center gap-2">
+                  <Plus size={20} />
+                  Adjust Stock
+                </button>
+              )}
             </div>
           </div>
 
