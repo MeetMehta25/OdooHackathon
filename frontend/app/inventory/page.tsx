@@ -3,21 +3,12 @@
 import { useState } from "react"
 import { TopNav } from "@/components/TopNav"
 import { Search, Download, Plus } from "lucide-react"
-
-interface InventoryItem {
-  id: string
-  product: string
-  sku: string
-  warehouse: string
-  location: string
-  quantity: number
-  reorderLevel: number
-  status: "in-stock" | "low" | "out"
-  lastUpdate: string
-}
+import { DataTable } from "@/components/ui/data-table"
+import { columns, InventoryItem } from "@/components/inventory/columns"
+import { InventoryForm } from "@/components/inventory/inventory-form"
 
 export default function InventoryPage() {
-  const [inventory] = useState<InventoryItem[]>([
+  const [inventory, setInventory] = useState<InventoryItem[]>([
     {
       id: "1",
       product: "Widget Pro",
@@ -55,6 +46,8 @@ export default function InventoryPage() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
+  const [showForm, setShowForm] = useState(false)
+  const [viewingItem, setViewingItem] = useState<InventoryItem | null>(null)
 
   const filteredInventory = inventory.filter((item) => {
     const matchesSearch =
@@ -64,17 +57,63 @@ export default function InventoryPage() {
     return matchesSearch && matchesStatus
   })
 
-  const statusColors = {
-    "in-stock": "text-success bg-success/10",
-    low: "text-warning bg-warning/10",
-    out: "text-error bg-error/10",
+  const handleAdjustStock = () => {
+    setViewingItem(null)
+    setShowForm(true)
   }
 
-  const statusLabels = {
-    "in-stock": "In Stock",
-    low: "Low Stock",
-    out: "Out of Stock",
+  const handleView = (item: InventoryItem) => {
+    setViewingItem(item)
+    setShowForm(true)
   }
+
+  const handleDeleteSelected = (selectedIds: string[]) => {
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} item(s)?`)) {
+      setInventory((prev) => prev.filter((item) => !selectedIds.includes(item.id)))
+    }
+  }
+
+  const handleFormClose = () => {
+    setShowForm(false)
+    setViewingItem(null)
+  }
+
+  const handleFormSubmit = (formData: Partial<InventoryItem>) => {
+    if (viewingItem) {
+      // Update existing item
+      setInventory((prev) =>
+        prev.map((item) =>
+          item.id === viewingItem.id
+            ? {
+                ...item,
+                ...formData,
+                status: (formData.quantity || 0) === 0 ? "out" : (formData.quantity || 0) < (formData.reorderLevel || 0) ? "low" : "in-stock",
+                lastUpdate: "Just now",
+              }
+            : item
+        )
+      )
+    } else {
+      // Create new item
+      const newItem: InventoryItem = {
+        id: Date.now().toString(),
+        product: formData.product || "",
+        sku: formData.sku || "",
+        warehouse: formData.warehouse || "",
+        location: formData.location || "",
+        quantity: formData.quantity || 0,
+        reorderLevel: formData.reorderLevel || 0,
+        status: (formData.quantity || 0) === 0 ? "out" : (formData.quantity || 0) < (formData.reorderLevel || 0) ? "low" : "in-stock",
+        lastUpdate: "Just now",
+      }
+      setInventory((prev) => [...prev, newItem])
+    }
+    handleFormClose()
+  }
+
+  const columnsWithHandlers = columns({
+    onView: handleView,
+  })
 
   return (
     <>
@@ -92,7 +131,7 @@ export default function InventoryPage() {
                 <Download size={20} />
                 Export
               </button>
-              <button className="btn-primary flex items-center gap-2">
+              <button onClick={handleAdjustStock} className="btn-primary flex items-center gap-2">
                 <Plus size={20} />
                 Adjust Stock
               </button>
@@ -123,55 +162,24 @@ export default function InventoryPage() {
             </select>
           </div>
 
-          {/* Inventory Table */}
-          <div className="card overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-card-border">
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Product</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">SKU</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Warehouse</th>
-                  <th className="text-center py-4 px-4 font-semibold text-sm">Quantity</th>
-                  <th className="text-center py-4 px-4 font-semibold text-sm">Reorder Level</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Status</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Last Update</th>
-                  <th className="text-right py-4 px-4 font-semibold text-sm">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInventory.map((item) => (
-                  <tr key={item.id} className="border-b border-card-border hover:bg-muted-bg transition-colors">
-                    <td className="py-4 px-4 font-medium">{item.product}</td>
-                    <td className="py-4 px-4 text-muted text-sm">{item.sku}</td>
-                    <td className="py-4 px-4 text-sm">
-                      {item.warehouse} • {item.location}
-                    </td>
-                    <td className="py-4 px-4 text-center font-medium">{item.quantity}</td>
-                    <td className="py-4 px-4 text-center text-muted">{item.reorderLevel}</td>
-                    <td className="py-4 px-4">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                          statusColors[item.status as keyof typeof statusColors]
-                        }`}
-                      >
-                        {statusLabels[item.status as keyof typeof statusLabels]}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-sm text-muted">{item.lastUpdate}</td>
-                    <td className="py-4 px-4 text-right">
-                      <button className="text-primary hover:text-primary-light text-sm font-medium">View</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Inventory Form */}
+          {showForm && (
+            <div className="mb-8 card">
+              <InventoryForm
+                onClose={handleFormClose}
+                onSubmit={handleFormSubmit}
+                item={viewingItem}
+                viewOnly={!!viewingItem}
+              />
+            </div>
+          )}
 
-            {filteredInventory.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted">No inventory items found</p>
-              </div>
-            )}
-          </div>
+          {/* Data Table */}
+          <DataTable
+            columns={columnsWithHandlers}
+            data={filteredInventory}
+            onDeleteSelected={handleDeleteSelected}
+          />
         </div>
       </main>
     </>

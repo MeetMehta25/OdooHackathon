@@ -2,20 +2,14 @@
 
 import { useState } from "react"
 import { TopNav } from "@/components/TopNav"
-import { Plus, Search, Eye, Edit, Trash2 } from "lucide-react"
+import { Plus, Search } from "lucide-react"
 
-interface Delivery {
-  id: string
-  number: string
-  customer: string
-  status: "draft" | "pending" | "ready" | "done" | "canceled"
-  expectedDate: string
-  items: number
-  createdDate: string
-}
+import { DataTable } from "@/components/ui/data-table"
+import { columns, Delivery } from "@/components/deliveries/columns"
+import { DeliveryForm } from "@/components/deliveries/delivery-form"
 
 export default function DeliveriesPage() {
-  const [deliveries] = useState<Delivery[]>([
+  const [deliveries, setDeliveries] = useState<Delivery[]>([
     {
       id: "1",
       number: "DEL-2024-001",
@@ -47,29 +41,89 @@ export default function DeliveriesPage() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
-
-  const statusColors = {
-    draft: "bg-muted text-muted",
-    pending: "bg-warning/10 text-warning",
-    ready: "bg-info/10 text-info",
-    done: "bg-success/10 text-success",
-    canceled: "bg-error/10 text-error",
-  }
-
-  const statusLabels = {
-    draft: "Draft",
-    pending: "Pending",
-    ready: "Ready",
-    done: "Delivered",
-    canceled: "Canceled",
-  }
+  const [showForm, setShowForm] = useState(false)
+  const [editingDelivery, setEditingDelivery] = useState<Delivery | null>(null)
+  const [viewingDelivery, setViewingDelivery] = useState<Delivery | null>(null)
 
   const filteredDeliveries = deliveries.filter((d) => {
     const matchesSearch =
       d.number.toLowerCase().includes(searchQuery.toLowerCase()) ||
       d.customer.toLowerCase().includes(searchQuery.toLowerCase())
+
     const matchesStatus = filterStatus === "all" || d.status === filterStatus
+
     return matchesSearch && matchesStatus
+  })
+
+  const handleNewDelivery = () => {
+    setEditingDelivery(null)
+    setShowForm(true)
+  }
+
+  const handleView = (delivery: Delivery) => {
+    setViewingDelivery(delivery)
+    setShowForm(true)
+  }
+
+  const handleEdit = (delivery: Delivery) => {
+    setEditingDelivery(delivery)
+    setViewingDelivery(null)
+    setShowForm(true)
+  }
+
+  const handleDelete = (delivery: Delivery) => {
+    if (confirm(`Are you sure you want to delete delivery ${delivery.number}?`)) {
+      setDeliveries((prev) => prev.filter((d) => d.id !== delivery.id))
+    }
+  }
+
+  const handleDeleteSelected = (selectedIds: string[]) => {
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} delivery(ies)?`)) {
+      setDeliveries((prev) => prev.filter((d) => !selectedIds.includes(d.id)))
+    }
+  }
+
+  const handleFormClose = () => {
+    setShowForm(false)
+    setEditingDelivery(null)
+    setViewingDelivery(null)
+  }
+
+  const handleFormSubmit = (formData: Partial<Delivery>) => {
+    if (editingDelivery) {
+      // Update existing delivery
+      setDeliveries((prev) =>
+        prev.map((d) =>
+          d.id === editingDelivery.id
+            ? {
+                ...d,
+                ...formData,
+                number: d.number, // Keep the original number
+              }
+            : d
+        )
+      )
+    } else {
+      // Create new delivery
+      const newDelivery: Delivery = {
+        id: Date.now().toString(),
+        number: `DEL-2024-${String(deliveries.length + 1).padStart(3, "0")}`,
+        customer: formData.customer || "",
+        status: formData.status || "draft",
+        expectedDate: formData.expectedDate || "",
+        items: formData.items || 0,
+        createdDate: new Date().toISOString().split("T")[0],
+      }
+      setDeliveries((prev) => [...prev, newDelivery])
+    }
+    handleFormClose()
+  }
+
+  // Create columns with handlers
+  const columnsWithHandlers = columns({
+    onView: handleView,
+    onEdit: handleEdit,
+    onDelete: handleDelete,
   })
 
   return (
@@ -77,13 +131,14 @@ export default function DeliveriesPage() {
       <TopNav />
       <main className="p-4 md:p-8">
         <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
             <div>
               <h1 className="text-4xl font-bold text-foreground">Deliveries</h1>
               <p className="text-muted mt-2">Manage outbound stock deliveries to customers</p>
             </div>
-            <button className="btn-primary flex items-center gap-2 w-fit">
+            <button onClick={handleNewDelivery} className="btn-primary flex items-center gap-2 w-fit">
               <Plus size={20} />
               New Delivery
             </button>
@@ -101,7 +156,12 @@ export default function DeliveriesPage() {
                 className="input-field w-full pl-10"
               />
             </div>
-            <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="input-field">
+
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="input-field"
+            >
               <option value="all">All Status</option>
               <option value="draft">Draft</option>
               <option value="pending">Pending</option>
@@ -111,61 +171,25 @@ export default function DeliveriesPage() {
             </select>
           </div>
 
-          {/* Deliveries List */}
-          <div className="card overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-card-border">
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Delivery #</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Customer</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Expected Date</th>
-                  <th className="text-center py-4 px-4 font-semibold text-sm">Items</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Status</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Created</th>
-                  <th className="text-right py-4 px-4 font-semibold text-sm">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredDeliveries.map((delivery) => (
-                  <tr key={delivery.id} className="border-b border-card-border hover:bg-muted-bg transition-colors">
-                    <td className="py-4 px-4 font-medium">{delivery.number}</td>
-                    <td className="py-4 px-4 text-foreground">{delivery.customer}</td>
-                    <td className="py-4 px-4 text-muted">{delivery.expectedDate}</td>
-                    <td className="py-4 px-4 text-center">{delivery.items}</td>
-                    <td className="py-4 px-4">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                          statusColors[delivery.status as keyof typeof statusColors]
-                        }`}
-                      >
-                        {statusLabels[delivery.status as keyof typeof statusLabels]}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-sm text-muted">{delivery.createdDate}</td>
-                    <td className="py-4 px-4 text-right">
-                      <div className="flex gap-2 justify-end">
-                        <button className="p-1 hover:bg-card-border rounded text-muted hover:text-foreground">
-                          <Eye size={18} />
-                        </button>
-                        <button className="p-1 hover:bg-card-border rounded text-muted hover:text-foreground">
-                          <Edit size={18} />
-                        </button>
-                        <button className="p-1 hover:bg-card-border rounded text-muted hover:text-error">
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Delivery Form */}
+          {showForm && (
+            <div className="mb-8 card">
+              <DeliveryForm
+                onClose={handleFormClose}
+                onSubmit={handleFormSubmit}
+                delivery={editingDelivery || viewingDelivery}
+                viewOnly={!!viewingDelivery && !editingDelivery}
+              />
+            </div>
+          )}
 
-            {filteredDeliveries.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted">No deliveries found</p>
-              </div>
-            )}
-          </div>
+          {/* ✅ SHADCN DATA TABLE — Correct Placement */}
+          <DataTable
+            columns={columnsWithHandlers}
+            data={filteredDeliveries}
+            onDeleteSelected={handleDeleteSelected}
+          />
+
         </div>
       </main>
     </div>

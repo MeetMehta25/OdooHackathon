@@ -2,20 +2,13 @@
 
 import { useState } from "react"
 import { TopNav } from "@/components/TopNav"
-import { Plus, Search, Eye, Edit, Trash2 } from "lucide-react"
-
-interface Receipt {
-  id: string
-  number: string
-  supplier: string
-  status: "draft" | "pending" | "ready" | "done" | "canceled"
-  expectedDate: string
-  items: number
-  createdDate: string
-}
+import { Plus, Search } from "lucide-react"
+import { DataTable } from "@/components/ui/data-table"
+import { columns, Receipt } from "@/components/receipts/columns"
+import { ReceiptForm } from "@/components/receipts/receipt-form"
 
 export default function ReceiptsPage() {
-  const [receipts] = useState<Receipt[]>([
+  const [receipts, setReceipts] = useState<Receipt[]>([
     {
       id: "1",
       number: "REC-2024-001",
@@ -47,22 +40,9 @@ export default function ReceiptsPage() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
-
-  const statusColors = {
-    draft: "bg-muted text-muted",
-    pending: "bg-warning/10 text-warning",
-    ready: "bg-info/10 text-info",
-    done: "bg-success/10 text-success",
-    canceled: "bg-error/10 text-error",
-  }
-
-  const statusLabels = {
-    draft: "Draft",
-    pending: "Pending",
-    ready: "Ready",
-    done: "Completed",
-    canceled: "Canceled",
-  }
+  const [showForm, setShowForm] = useState(false)
+  const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null)
+  const [viewingReceipt, setViewingReceipt] = useState<Receipt | null>(null)
 
   const filteredReceipts = receipts.filter((r) => {
     const matchesSearch =
@@ -70,6 +50,76 @@ export default function ReceiptsPage() {
       r.supplier.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = filterStatus === "all" || r.status === filterStatus
     return matchesSearch && matchesStatus
+  })
+
+  const handleNewReceipt = () => {
+    setEditingReceipt(null)
+    setShowForm(true)
+  }
+
+  const handleView = (receipt: Receipt) => {
+    setViewingReceipt(receipt)
+    setShowForm(true)
+  }
+
+  const handleEdit = (receipt: Receipt) => {
+    setEditingReceipt(receipt)
+    setViewingReceipt(null)
+    setShowForm(true)
+  }
+
+  const handleDelete = (receipt: Receipt) => {
+    if (confirm(`Are you sure you want to delete receipt ${receipt.number}?`)) {
+      setReceipts((prev) => prev.filter((r) => r.id !== receipt.id))
+    }
+  }
+
+  const handleDeleteSelected = (selectedIds: string[]) => {
+    if (confirm(`Are you sure you want to delete ${selectedIds.length} receipt(s)?`)) {
+      setReceipts((prev) => prev.filter((r) => !selectedIds.includes(r.id)))
+    }
+  }
+
+  const handleFormClose = () => {
+    setShowForm(false)
+    setEditingReceipt(null)
+    setViewingReceipt(null)
+  }
+
+  const handleFormSubmit = (formData: Partial<Receipt>) => {
+    if (editingReceipt) {
+      // Update existing receipt
+      setReceipts((prev) =>
+        prev.map((r) =>
+          r.id === editingReceipt.id
+            ? {
+                ...r,
+                ...formData,
+                number: r.number, // Keep the original number
+              }
+            : r
+        )
+      )
+    } else {
+      // Create new receipt
+      const newReceipt: Receipt = {
+        id: Date.now().toString(),
+        number: `REC-2024-${String(receipts.length + 1).padStart(3, "0")}`,
+        supplier: formData.supplier || "",
+        status: formData.status || "draft",
+        expectedDate: formData.expectedDate || "",
+        items: formData.items || 0,
+        createdDate: new Date().toISOString().split("T")[0],
+      }
+      setReceipts((prev) => [...prev, newReceipt])
+    }
+    handleFormClose()
+  }
+
+  const columnsWithHandlers = columns({
+    onView: handleView,
+    onEdit: handleEdit,
+    onDelete: handleDelete,
   })
 
   return (
@@ -83,7 +133,7 @@ export default function ReceiptsPage() {
               <h1 className="text-4xl font-bold text-foreground">Receipts</h1>
               <p className="text-muted mt-2">Manage inbound stock receipts from suppliers</p>
             </div>
-            <button className="btn-primary flex items-center gap-2 w-fit">
+            <button onClick={handleNewReceipt} className="btn-primary flex items-center gap-2 w-fit">
               <Plus size={20} />
               New Receipt
             </button>
@@ -111,61 +161,24 @@ export default function ReceiptsPage() {
             </select>
           </div>
 
-          {/* Receipts List */}
-          <div className="card overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-card-border">
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Receipt #</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Supplier</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Expected Date</th>
-                  <th className="text-center py-4 px-4 font-semibold text-sm">Items</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Status</th>
-                  <th className="text-left py-4 px-4 font-semibold text-sm">Created</th>
-                  <th className="text-right py-4 px-4 font-semibold text-sm">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredReceipts.map((receipt) => (
-                  <tr key={receipt.id} className="border-b border-card-border hover:bg-muted-bg transition-colors">
-                    <td className="py-4 px-4 font-medium">{receipt.number}</td>
-                    <td className="py-4 px-4 text-foreground">{receipt.supplier}</td>
-                    <td className="py-4 px-4 text-muted">{receipt.expectedDate}</td>
-                    <td className="py-4 px-4 text-center">{receipt.items}</td>
-                    <td className="py-4 px-4">
-                      <span
-                        className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                          statusColors[receipt.status as keyof typeof statusColors]
-                        }`}
-                      >
-                        {statusLabels[receipt.status as keyof typeof statusLabels]}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4 text-sm text-muted">{receipt.createdDate}</td>
-                    <td className="py-4 px-4 text-right">
-                      <div className="flex gap-2 justify-end">
-                        <button className="p-1 hover:bg-card-border rounded text-muted hover:text-foreground">
-                          <Eye size={18} />
-                        </button>
-                        <button className="p-1 hover:bg-card-border rounded text-muted hover:text-foreground">
-                          <Edit size={18} />
-                        </button>
-                        <button className="p-1 hover:bg-card-border rounded text-muted hover:text-error">
-                          <Trash2 size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Receipt Form */}
+          {showForm && (
+            <div className="mb-8 card">
+              <ReceiptForm
+                onClose={handleFormClose}
+                onSubmit={handleFormSubmit}
+                receipt={editingReceipt || viewingReceipt}
+                viewOnly={!!viewingReceipt && !editingReceipt}
+              />
+            </div>
+          )}
 
-            {filteredReceipts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted">No receipts found</p>
-              </div>
-            )}
-          </div>
+          {/* Data Table */}
+          <DataTable
+            columns={columnsWithHandlers}
+            data={filteredReceipts}
+            onDeleteSelected={handleDeleteSelected}
+          />
         </div>
       </main>
     </>
