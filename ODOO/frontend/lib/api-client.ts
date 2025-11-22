@@ -58,6 +58,19 @@ class APIClient {
     });
   }
 
+  // Password Reset
+  forgotPassword(email: string) {
+    return this.client.post("/users/forgot-password", { email });
+  }
+
+  verifyOTP(email: string, otp: string, newPassword: string) {
+    return this.client.post("/users/verify-otp", {
+      email,
+      otp,
+      new_password: newPassword,
+    });
+  }
+
   // User Profile
   getProfile() {
     return this.client.get("/users/profile");

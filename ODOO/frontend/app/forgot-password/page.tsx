@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { apiClient } from "@/lib/api-client"
@@ -17,18 +17,53 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState("")
+  const [resendCooldown, setResendCooldown] = useState(0)
+
+  // OTP input formatting - only allow numbers
+  const handleOTPChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 6)
+    setOtp(value)
+  }
+
+  // Resend OTP countdown
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [resendCooldown])
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    setSuccess("")
     setLoading(true)
 
     try {
-      await apiClient.forgotPassword(email)
-      setSuccess("OTP sent to your email")
+      const response = await apiClient.forgotPassword(email)
+      setSuccess(response.data?.message || "OTP sent to your email. Please check your inbox.")
       setStep("otp")
+      setResendCooldown(60) // 60 second cooldown
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to send OTP")
+      setError(err.response?.data?.message || "Failed to send OTP. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleResendOTP = async () => {
+    if (resendCooldown > 0) return
+    
+    setError("")
+    setSuccess("")
+    setLoading(true)
+
+    try {
+      const response = await apiClient.forgotPassword(email)
+      setSuccess(response.data?.message || "OTP resent to your email.")
+      setResendCooldown(60)
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to resend OTP. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -86,20 +121,36 @@ export default function ForgotPasswordPage() {
                   placeholder="you@example.com"
                   className="input-field w-full"
                   required
+                  disabled={loading}
                 />
               </div>
             ) : (
               <>
                 <div>
-                  <label className="block text-sm font-medium mb-2">OTP</label>
+                  <label className="block text-sm font-medium mb-2">OTP Code</label>
                   <input
                     type="text"
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder="000000"
-                    className="input-field w-full"
+                    onChange={handleOTPChange}
+                    placeholder="Enter 6-digit OTP"
+                    className="input-field w-full text-center text-2xl tracking-widest font-mono"
+                    maxLength={6}
                     required
+                    disabled={loading}
                   />
+                  <p className="text-xs text-muted mt-1">
+                    Enter the 6-digit code sent to {email}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleResendOTP}
+                    disabled={resendCooldown > 0 || loading}
+                    className="text-sm text-primary hover:text-primary-light mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {resendCooldown > 0
+                      ? `Resend OTP in ${resendCooldown}s`
+                      : "Resend OTP"}
+                  </button>
                 </div>
 
                 <div>
@@ -111,7 +162,10 @@ export default function ForgotPasswordPage() {
                     placeholder="••••••••"
                     className="input-field w-full"
                     required
+                    minLength={6}
+                    disabled={loading}
                   />
+                  <p className="text-xs text-muted mt-1">Minimum 6 characters</p>
                 </div>
 
                 <div>
@@ -123,7 +177,12 @@ export default function ForgotPasswordPage() {
                     placeholder="••••••••"
                     className="input-field w-full"
                     required
+                    minLength={6}
+                    disabled={loading}
                   />
+                  {newPassword && confirmPassword && newPassword !== confirmPassword && (
+                    <p className="text-xs text-error mt-1">Passwords do not match</p>
+                  )}
                 </div>
               </>
             )}

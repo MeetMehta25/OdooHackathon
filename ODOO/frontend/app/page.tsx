@@ -26,7 +26,7 @@ export default function Home() {
 
         <Link
           href="/login"
-          className="rounded-full bg-black text-white dark:bg-white dark:text-black px-6 py-3 text-base font-medium hover:opacity-80 transition"
+          className="btn-primary"
         >
           Get Started
         </Link>

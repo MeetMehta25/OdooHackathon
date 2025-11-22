@@ -263,18 +263,36 @@
   }
 
   .glass-card .btn-primary {
-    background: rgba(123, 44, 191, 0.85) !important;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(123, 44, 191, 0.4) !important;
-    box-shadow: 0 4px 16px rgba(123, 44, 191, 0.3);
+    padding: 17px 40px !important;
+    border-radius: 50px !important;
+    cursor: pointer;
+    border: 0 !important;
+    background-color: white !important;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    font-size: 15px !important;
+    font-weight: 500;
+    color: var(--foreground);
+    transition: all 0.5s ease;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .glass-card .btn-primary:hover {
-    background: rgba(123, 44, 191, 0.95) !important;
-    backdrop-filter: blur(45px);
-    -webkit-backdrop-filter: blur(45px);
-    box-shadow: 0 6px 20px rgba(123, 44, 191, 0.4);
+    letter-spacing: 3px !important;
+    background-color: hsl(261deg 80% 48%) !important;
+    color: hsl(0, 0%, 100%) !important;
+    box-shadow: rgb(93 24 220) 0px 7px 29px 0px !important;
+  }
+
+  .glass-card .btn-primary:active {
+    letter-spacing: 3px !important;
+    background-color: hsl(261deg 80% 48%) !important;
+    color: hsl(0, 0%, 100%) !important;
+    box-shadow: rgb(93 24 220) 0px 0px 0px 0px !important;
+    transform: translateY(10px);
+    transition: 100ms;
   }
 
   .glass-nav {
@@ -331,42 +349,75 @@
   }
 
   .btn-primary {
-    background: rgba(123, 44, 191, 0.8) !important;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(123, 44, 191, 0.3) !important;
-    color: var(--primary-foreground);
+    padding: 17px 40px !important;
+    border-radius: 50px !important;
+    cursor: pointer;
+    border: 0 !important;
+    background-color: white !important;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    font-size: 15px !important;
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    box-shadow: 0 4px 16px rgba(123, 44, 191, 0.3);
-    transition: all 0.2s;
+    color: var(--foreground);
+    transition: all 0.5s ease;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .btn-primary:hover {
-    background: rgba(123, 44, 191, 0.9) !important;
-    backdrop-filter: blur(45px);
-    -webkit-backdrop-filter: blur(45px);
-    box-shadow: 0 6px 20px rgba(123, 44, 191, 0.4);
+    letter-spacing: 3px !important;
+    background-color: hsl(261deg 80% 48%) !important;
+    color: hsl(0, 0%, 100%) !important;
+    box-shadow: rgb(93 24 220) 0px 7px 29px 0px !important;
+  }
+
+  .btn-primary:active {
+    letter-spacing: 3px !important;
+    background-color: hsl(261deg 80% 48%) !important;
+    color: hsl(0, 0%, 100%) !important;
+    box-shadow: rgb(93 24 220) 0px 0px 0px 0px !important;
+    transform: translateY(10px);
+    transition: 100ms;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
   }
 
   .btn-secondary {
-    background: rgba(252, 252, 249, 0.7) !important;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    color: var(--foreground);
+    padding: 17px 40px !important;
+    border-radius: 50px !important;
+    cursor: pointer;
+    border: 0 !important;
+    background-color: white !important;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    font-size: 15px !important;
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    transition: all 0.2s;
+    color: var(--foreground);
+    transition: all 0.5s ease;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .btn-secondary:hover {
-    background: rgba(168, 89, 254, 0.5) !important;
-    backdrop-filter: blur(45px);
-    -webkit-backdrop-filter: blur(45px);
-    border-color: rgba(168, 89, 254, 0.6) !important;
+    letter-spacing: 3px !important;
+    background-color: hsl(261deg 80% 48%) !important;
+    color: hsl(0, 0%, 100%) !important;
+    box-shadow: rgb(93 24 220) 0px 7px 29px 0px !important;
+  }
+
+  .btn-secondary:active {
+    letter-spacing: 3px !important;
+    background-color: hsl(261deg 80% 48%) !important;
+    color: hsl(0, 0%, 100%) !important;
+    box-shadow: rgb(93 24 220) 0px 0px 0px 0px !important;
+    transform: translateY(10px);
+    transition: 100ms;
   }
 
   .muted-bg {
