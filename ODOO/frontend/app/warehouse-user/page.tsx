@@ -3,14 +3,21 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/lib/auth-store";
+import { apiClient } from "@/lib/api-client";
 import { WarehouseUserNav } from "@/components/warehouse-user-nav";
 import { ShelvingList } from "@/components/shelving-list";
+import { TransferForm } from "@/components/transfers/transfer-form";
 
 export default function WarehouseUserPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const user = useAuthStore((state) => state.user);
   const [activeTab, setActiveTab] = useState("transfers");
+  const [transfers, setTransfers] = useState<any[]>([]);
+  const [locations, setLocations] = useState<any[]>([]);
+  const [showTransferForm, setShowTransferForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     // Redirect if not warehouse staff
@@ -23,6 +30,109 @@ export default function WarehouseUserPage() {
     const tab = searchParams.get("tab") || "transfers";
     setActiveTab(tab);
   }, [searchParams]);
+
+  useEffect(() => {
+    if (activeTab === "transfers") {
+      fetchTransfers();
+      fetchLocations();
+    }
+  }, [activeTab]);
+
+  const fetchTransfers = async () => {
+    try {
+      setLoading(true);
+      const response = await apiClient.getTransfers();
+      setTransfers(response.data.data || []);
+    } catch (err: any) {
+      console.error("Error fetching transfers:", err);
+      setError("Failed to load transfers");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLocations = async () => {
+    try {
+      const response = await apiClient.getLocations();
+      console.log("Locations response:", response.data);
+
+      // Filter to only include locations with valid UUID format
+      const allLocations = response.data.data || [];
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const validLocations = allLocations.filter((loc: any) =>
+        uuidRegex.test(loc.id)
+      );
+
+      console.log(
+        `Filtered ${validLocations.length} valid UUID locations from ${allLocations.length} total`
+      );
+      setLocations(validLocations);
+    } catch (err: any) {
+      console.error("Error fetching locations:", err);
+      console.error("Error details:", err.response?.data);
+    }
+  };
+
+  const handleCreateTransfer = async (formData: any) => {
+    try {
+      setLoading(true);
+      setError("");
+
+      console.log("Creating transfer with data:", formData);
+      console.log("Source location ID:", formData.source_location_id);
+      console.log("Destination location ID:", formData.destination_location_id);
+      console.log("Source ID type:", typeof formData.source_location_id);
+      console.log(
+        "Destination ID type:",
+        typeof formData.destination_location_id
+      );
+      console.log(
+        "Source ID value length:",
+        formData.source_location_id?.length
+      );
+      console.log(
+        "Destination ID value length:",
+        formData.destination_location_id?.length
+      );
+
+      // Create transfer with source and destination location IDs
+      const response = await apiClient.createTransfer({
+        source_location_id: formData.source_location_id,
+        destination_location_id: formData.destination_location_id,
+      });
+
+      console.log("Transfer created successfully:", response.data);
+
+      setShowTransferForm(false);
+      fetchTransfers(); // Refresh the list
+    } catch (err: any) {
+      console.error("Error creating transfer:", err);
+      console.error("Error response:", err.response?.data);
+      console.error("Error status:", err.response?.status);
+      console.error(
+        "Error details:",
+        JSON.stringify(err.response?.data, null, 2)
+      );
+      setError(
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Failed to create transfer"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateStatus = async (transferId: string, newStatus: string) => {
+    try {
+      await apiClient.updateTransferStatus(transferId, newStatus);
+      fetchTransfers(); // Refresh the list
+    } catch (err: any) {
+      console.error("Error updating transfer status:", err);
+      setError(err.response?.data?.message || "Failed to update status");
+    }
+  };
 
   const renderTransfers = () => (
     <div className="space-y-6">
@@ -50,10 +160,19 @@ export default function WarehouseUserPage() {
         </div>
       </div>
 
+      {error && (
+        <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm mb-4">
+          {error}
+        </div>
+      )}
+
       <div className="card">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Transfer Orders</h2>
-          <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:opacity-90 transition">
+          <button
+            onClick={() => setShowTransferForm(true)}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:opacity-90 transition"
+          >
             New Transfer
           </button>
         </div>
@@ -77,77 +196,114 @@ export default function WarehouseUserPage() {
               </tr>
             </thead>
             <tbody>
-              {[
-                {
-                  id: "TR-001",
-                  product: "Steel Rods",
-                  from: "A-01",
-                  to: "B-05",
-                  qty: 50,
-                  status: "pending",
-                },
-                {
-                  id: "TR-002",
-                  product: "Bearings",
-                  from: "C-02",
-                  to: "A-03",
-                  qty: 120,
-                  status: "in-transit",
-                },
-                {
-                  id: "TR-003",
-                  product: "Fasteners",
-                  from: "B-04",
-                  to: "C-01",
-                  qty: 200,
-                  status: "completed",
-                },
-              ].map((transfer) => (
-                <tr
-                  key={transfer.id}
-                  className="border-b border-card-border hover:bg-card-hover"
-                >
-                  <td className="p-3 font-mono text-sm font-medium text-primary">
-                    {transfer.id}
-                  </td>
-                  <td className="p-3 text-sm">{transfer.product}</td>
-                  <td className="p-3 text-sm">
-                    <span className="text-muted">{transfer.from}</span>
-                    <span className="mx-2">→</span>
-                    <span className="font-medium">{transfer.to}</span>
-                  </td>
-                  <td className="p-3 text-sm font-semibold">{transfer.qty}</td>
-                  <td className="p-3">
-                    <span
-                      className={`px-2 py-1 rounded-md text-xs font-medium capitalize ${
-                        transfer.status === "completed"
-                          ? "bg-green-500/10 text-green-500"
-                          : transfer.status === "in-transit"
-                          ? "bg-blue-500/10 text-blue-500"
-                          : "bg-yellow-500/10 text-yellow-500"
-                      }`}
-                    >
-                      {transfer.status.replace("-", " ")}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    {transfer.status === "pending" && (
-                      <button className="px-3 py-1 bg-blue-500 text-white rounded-md text-xs font-medium hover:bg-blue-600">
-                        Start
-                      </button>
-                    )}
-                    {transfer.status === "in-transit" && (
-                      <button className="px-3 py-1 bg-green-500 text-white rounded-md text-xs font-medium hover:bg-green-600">
-                        Complete
-                      </button>
-                    )}
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-muted">
+                    Loading transfers...
                   </td>
                 </tr>
-              ))}
+              ) : transfers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-muted">
+                    No transfers found. Click "New Transfer" to create one.
+                  </td>
+                </tr>
+              ) : (
+                transfers.map((transfer) => (
+                  <tr
+                    key={transfer.id}
+                    className="border-b border-card-border hover:bg-card-hover"
+                  >
+                    <td className="p-3 font-mono text-sm font-medium text-primary">
+                      {transfer.reference_no}
+                    </td>
+                    <td className="p-3 text-sm">
+                      {transfer.created_by_name || "N/A"}
+                    </td>
+                    <td className="p-3 text-sm">
+                      <span className="text-muted">
+                        {transfer.source_location_name ||
+                          transfer.source_warehouse_name ||
+                          "N/A"}
+                      </span>
+                      <span className="mx-2">→</span>
+                      <span className="font-medium">
+                        {transfer.destination_location_name ||
+                          transfer.destination_warehouse_name ||
+                          "N/A"}
+                      </span>
+                    </td>
+                    <td className="p-3 text-sm font-semibold">
+                      {transfer.total_items || 0}
+                    </td>
+                    <td className="p-3">
+                      <span
+                        className={`px-2 py-1 rounded-md text-xs font-medium capitalize ${
+                          transfer.status === "done"
+                            ? "bg-green-500/10 text-green-500"
+                            : transfer.status === "ready"
+                            ? "bg-blue-500/10 text-blue-500"
+                            : transfer.status === "pending"
+                            ? "bg-yellow-500/10 text-yellow-500"
+                            : transfer.status === "canceled"
+                            ? "bg-red-500/10 text-red-500"
+                            : "bg-gray-500/10 text-gray-500"
+                        }`}
+                      >
+                        {transfer.status}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      {transfer.status === "draft" && (
+                        <button
+                          onClick={() =>
+                            handleUpdateStatus(transfer.id, "pending")
+                          }
+                          className="px-3 py-1 bg-blue-500 text-white rounded-md text-xs font-medium hover:bg-blue-600"
+                        >
+                          Start
+                        </button>
+                      )}
+                      {transfer.status === "pending" && (
+                        <button
+                          onClick={() =>
+                            handleUpdateStatus(transfer.id, "ready")
+                          }
+                          className="px-3 py-1 bg-green-500 text-white rounded-md text-xs font-medium hover:bg-green-600"
+                        >
+                          Mark Ready
+                        </button>
+                      )}
+                      {transfer.status === "ready" && (
+                        <button
+                          onClick={() =>
+                            handleUpdateStatus(transfer.id, "done")
+                          }
+                          className="px-3 py-1 bg-green-500 text-white rounded-md text-xs font-medium hover:bg-green-600"
+                        >
+                          Complete
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {showTransferForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-background rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+            <TransferForm
+              onClose={() => setShowTransferForm(false)}
+              onSubmit={handleCreateTransfer}
+              locations={locations}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 

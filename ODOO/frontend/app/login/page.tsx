@@ -22,71 +22,39 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Mock login for testing - admin/admin
-      if (email.toLowerCase() === "admin" && password === "admin") {
-        const mockUser = {
-          id: "1",
-          email: "admin@stockmaster.com",
-          name: "Admin User",
-          role: "admin" as const,
-          createdAt: new Date().toISOString(),
-        };
-        const mockToken = "mock-jwt-token-" + Date.now();
-        setAuth(mockUser, mockToken);
-        router.push("/admin");
-        setLoading(false);
-        return;
-      }
-
-      // Mock login for testing - warehouse/warehouse (warehouse staff)
-      if (email.toLowerCase() === "warehouse" && password === "warehouse") {
-        const mockUser = {
-          id: "2",
-          email: "warehouse@stockmaster.com",
-          name: "Warehouse Staff",
-          role: "warehouse_staff" as const,
-          createdAt: new Date().toISOString(),
-        };
-        const mockToken = "mock-jwt-token-warehouse-" + Date.now();
-        setAuth(mockUser, mockToken);
-        router.push("/warehouse-user");
-        setLoading(false);
-        return;
-      }
-
-      // Mock login for testing - manager/manager (inventory manager)
-      if (email.toLowerCase() === "manager" && password === "manager") {
-        const mockUser = {
-          id: "3",
-          email: "manager@stockmaster.com",
-          name: "Inventory Manager",
-          role: "inventory_manager" as const,
-          createdAt: new Date().toISOString(),
-        };
-        const mockToken = "mock-jwt-token-manager-" + Date.now();
-        setAuth(mockUser, mockToken);
-        router.push("/dashboard");
-        setLoading(false);
-        return;
-      }
-
-      // Try API login for other users
+      // Call backend API for login
       const response = await apiClient.login(email, password);
-      const { token, user } = response.data;
+
+      // Backend returns: { success: true, message: "Login successful", data: { id, email, full_name, role, token } }
+      const { data } = response.data;
+      const { token, id, email: userEmail, full_name, role } = data;
+
+      // Store user info in auth store
+      const user = {
+        id,
+        email: userEmail,
+        name: full_name,
+        role,
+        createdAt: new Date().toISOString(),
+      };
+
       setAuth(user, token);
 
       // Redirect based on role
-      if (user.role === "admin") {
+      if (role === "admin") {
         router.push("/admin");
-      } else if (user.role === "warehouse_staff") {
+      } else if (role === "warehouse_staff") {
         router.push("/warehouse-user");
+      } else if (role === "inventory_manager") {
+        router.push("/dashboard");
       } else {
         router.push("/dashboard");
       }
     } catch (err: any) {
+      console.error("Login error:", err);
       setError(
         err.response?.data?.message ||
-          "Login failed. Try admin/admin, warehouse/warehouse, or manager/manager for testing."
+          "Login failed. Please check your credentials and try again."
       );
     } finally {
       setLoading(false);
@@ -104,41 +72,6 @@ export default function LoginPage() {
             Manage your inventory with precision
           </p>
 
-          <div className="mb-4 space-y-3">
-            <div className="p-3 bg-info/10 border border-info/20 rounded-md text-sm">
-              <p className="font-medium text-info mb-2">Test Credentials:</p>
-              <div className="space-y-1">
-                <div>
-                  <p className="text-muted text-xs mb-1">
-                    Admin (Full Access):
-                  </p>
-                  <p className="text-muted">
-                    Username: <span className="font-mono">admin</span> |
-                    Password: <span className="font-mono">admin</span>
-                  </p>
-                </div>
-                <div className="pt-2 border-t border-info/20">
-                  <p className="text-muted text-xs mb-1">
-                    Warehouse Staff (Limited Access):
-                  </p>
-                  <p className="text-muted">
-                    Username: <span className="font-mono">warehouse</span> |
-                    Password: <span className="font-mono">warehouse</span>
-                  </p>
-                </div>
-                <div className="pt-2 border-t border-info/20">
-                  <p className="text-muted text-xs mb-1">
-                    Inventory Manager (Management Access):
-                  </p>
-                  <p className="text-muted">
-                    Username: <span className="font-mono">manager</span> |
-                    Password: <span className="font-mono">manager</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
               <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm">
@@ -147,14 +80,12 @@ export default function LoginPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Email or Username
-              </label>
+              <label className="block text-sm font-medium mb-2">Email</label>
               <input
-                type="text"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin / warehouse (for testing) or you@example.com"
+                placeholder="you@example.com"
                 className="input-field w-full"
                 required
               />

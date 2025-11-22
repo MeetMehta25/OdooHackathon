@@ -1,149 +1,168 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import { X } from "lucide-react"
-import type { Transfer } from "./columns"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { X } from "lucide-react";
+import type { Transfer } from "./columns";
 
 interface TransferFormProps {
-  onClose: () => void
-  onSubmit?: (formData: Partial<Transfer>) => void
-  transfer?: Transfer | null
-  viewOnly?: boolean
+  onClose: () => void;
+  onSubmit?: (formData: any) => void;
+  transfer?: Transfer | null;
+  viewOnly?: boolean;
+  locations?: any[];
 }
 
-export function TransferForm({ onClose, onSubmit, transfer, viewOnly = false }: TransferFormProps) {
+export function TransferForm({
+  onClose,
+  onSubmit,
+  transfer,
+  viewOnly = false,
+  locations = [],
+}: TransferFormProps) {
   const [formData, setFormData] = useState({
-    product: "",
-    fromWarehouse: "",
-    toWarehouse: "",
-    quantity: 0,
-    status: "draft" as Transfer["status"],
-  })
+    source_location_id: "",
+    destination_location_id: "",
+  });
 
+  useEffect(() => {
+    console.log("TransferForm - locations prop:", locations);
+  }, [locations]);
   useEffect(() => {
     if (transfer) {
       setFormData({
-        product: transfer.product,
-        fromWarehouse: transfer.fromWarehouse,
-        toWarehouse: transfer.toWarehouse,
-        quantity: transfer.quantity,
-        status: transfer.status,
-      })
+        source_location_id: transfer.fromWarehouse,
+        destination_location_id: transfer.toWarehouse,
+      });
     }
-  }, [transfer])
+  }, [transfer]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "quantity" ? Number.parseInt(value) || 0 : value,
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (onSubmit) {
-      onSubmit(formData)
+      onSubmit(formData);
     } else {
-      console.log(transfer ? "Updating transfer:" : "Creating transfer:", formData)
-      onClose()
+      console.log(
+        transfer ? "Updating transfer:" : "Creating transfer:",
+        formData
+      );
+      onClose();
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">
-          {viewOnly ? "View Transfer" : transfer ? "Edit Transfer" : "New Transfer"}
+          {viewOnly
+            ? "View Transfer"
+            : transfer
+            ? "Edit Transfer"
+            : "New Transfer"}
         </h2>
-        <button type="button" onClick={onClose} className="text-muted hover:text-foreground">
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-muted hover:text-foreground"
+        >
           <X size={24} />
         </button>
       </div>
 
       {transfer && (
         <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">Transfer Number</label>
-          <input type="text" value={transfer.number} className="input-field w-full" disabled readOnly />
+          <label className="block text-sm font-medium mb-2">
+            Transfer Number
+          </label>
+          <input
+            type="text"
+            value={transfer.number}
+            className="input-field w-full"
+            disabled
+            readOnly
+          />
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <div>
-          <label className="block text-sm font-medium mb-2">Product</label>
-          <input
-            type="text"
-            name="product"
-            value={formData.product}
-            onChange={handleChange}
-            placeholder="e.g., Widget Pro"
-            className="input-field w-full"
-            required
-            disabled={viewOnly}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Quantity</label>
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            placeholder="0"
-            min="1"
-            className="input-field w-full"
-            required
-            disabled={viewOnly}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">From Warehouse</label>
-          <input
-            type="text"
-            name="fromWarehouse"
-            value={formData.fromWarehouse}
-            onChange={handleChange}
-            placeholder="e.g., Main WH"
-            className="input-field w-full"
-            required
-            disabled={viewOnly}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">To Warehouse</label>
-          <input
-            type="text"
-            name="toWarehouse"
-            value={formData.toWarehouse}
-            onChange={handleChange}
-            placeholder="e.g., Secondary WH"
-            className="input-field w-full"
-            required
-            disabled={viewOnly}
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Status</label>
+          <label className="block text-sm font-medium mb-2">
+            Source Location *
+          </label>
           <select
-            name="status"
-            value={formData.status}
+            name="source_location_id"
+            value={formData.source_location_id}
             onChange={handleChange}
             className="input-field w-full"
             required
             disabled={viewOnly}
           >
-            <option value="draft">Draft</option>
-            <option value="pending">Pending</option>
-            <option value="in-transit">In Transit</option>
-            <option value="completed">Completed</option>
-            <option value="canceled">Canceled</option>
+            <option value="">Select source location</option>
+            {locations.length === 0 ? (
+              <option value="" disabled>
+                No locations available. Please create warehouses and locations
+                first.
+              </option>
+            ) : (
+              locations.map((location) => (
+                <option key={location.id} value={location.id}>
+                  {location.warehouse_name} - {location.name}
+                  {location.zone ? ` (${location.zone})` : ""}
+                </option>
+              ))
+            )}
           </select>
+          <p className="text-xs text-muted mt-1">
+            Where items will be transferred from
+          </p>
         </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-2">
+            Destination Location *
+          </label>
+          <select
+            name="destination_location_id"
+            value={formData.destination_location_id}
+            onChange={handleChange}
+            className="input-field w-full"
+            required
+            disabled={viewOnly}
+          >
+            <option value="">Select destination location</option>
+            {locations.length === 0 ? (
+              <option value="" disabled>
+                No locations available. Please create warehouses and locations
+                first.
+              </option>
+            ) : (
+              locations.map((location) => (
+                <option key={location.id} value={location.id}>
+                  {location.warehouse_name} - {location.name}
+                  {location.zone ? ` (${location.zone})` : ""}
+                </option>
+              ))
+            )}
+          </select>
+          <p className="text-xs text-muted mt-1">
+            Where items will be transferred to
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 p-4 bg-info/10 border border-info/20 rounded-md">
+        <p className="text-sm text-muted">
+          <strong>Note:</strong> After creating the transfer, you can add items
+          to it from the transfer details page.
+        </p>
       </div>
 
       <div className="flex gap-3 mt-6">
@@ -152,11 +171,14 @@ export function TransferForm({ onClose, onSubmit, transfer, viewOnly = false }: 
             {transfer ? "Update Transfer" : "Create Transfer"}
           </button>
         )}
-        <button type="button" onClick={onClose} className={viewOnly ? "btn-primary" : "btn-secondary"}>
+        <button
+          type="button"
+          onClick={onClose}
+          className={viewOnly ? "btn-primary" : "btn-secondary"}
+        >
           {viewOnly ? "Close" : "Cancel"}
         </button>
       </div>
     </form>
-  )
+  );
 }
-

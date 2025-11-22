@@ -1,9 +1,9 @@
-import axios, { type AxiosInstance } from "axios"
+import axios, { type AxiosInstance } from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 class APIClient {
-  private client: AxiosInstance
+  private client: AxiosInstance;
 
   constructor() {
     this.client = axios.create({
@@ -11,122 +11,163 @@ class APIClient {
       headers: {
         "Content-Type": "application/json",
       },
-    })
+    });
 
     // Add request interceptor for JWT
     this.client.interceptors.request.use((config) => {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`
+        config.headers.Authorization = `Bearer ${token}`;
       }
-      return config
-    })
+      return config;
+    });
 
     // Add response interceptor for error handling
     this.client.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
-          localStorage.removeItem("token")
-          localStorage.removeItem("user")
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
           if (typeof window !== "undefined") {
-            window.location.href = "/login"
+            window.location.href = "/login";
           }
         }
-        return Promise.reject(error)
-      },
-    )
+        return Promise.reject(error);
+      }
+    );
   }
 
   // Auth
   login(email: string, password: string) {
-    return this.client.post("/auth/login", { email, password })
+    return this.client.post("/users/login", { email, password });
   }
 
-  register(email: string, password: string, name: string) {
-    return this.client.post("/auth/register", { email, password, name })
+  register(
+    email: string,
+    password: string,
+    full_name: string,
+    role: string = "warehouse_staff"
+  ) {
+    return this.client.post("/users/register", {
+      email,
+      password,
+      full_name,
+      role,
+    });
   }
 
-  forgotPassword(email: string) {
-    return this.client.post("/auth/forgot-password", { email })
-  }
-
-  verifyOTP(email: string, otp: string, newPassword: string) {
-    return this.client.post("/auth/verify-otp", { email, otp, newPassword })
+  // User Profile
+  getProfile() {
+    return this.client.get("/users/profile");
   }
 
   // Products
   getProducts() {
-    return this.client.get("/products")
+    return this.client.get("/products");
   }
 
   createProduct(data: any) {
-    return this.client.post("/products", data)
+    return this.client.post("/products", data);
   }
 
   updateProduct(id: string, data: any) {
-    return this.client.put(`/products/${id}`, data)
+    return this.client.put(`/products/${id}`, data);
   }
 
   deleteProduct(id: string) {
-    return this.client.delete(`/products/${id}`)
+    return this.client.delete(`/products/${id}`);
   }
 
   // Categories
   getCategories() {
-    return this.client.get("/categories")
+    return this.client.get("/categories");
   }
 
   createCategory(data: any) {
-    return this.client.post("/categories", data)
+    return this.client.post("/categories", data);
   }
 
   updateCategory(id: string, data: any) {
-    return this.client.put(`/categories/${id}`, data)
+    return this.client.put(`/categories/${id}`, data);
   }
 
   deleteCategory(id: string) {
-    return this.client.delete(`/categories/${id}`)
+    return this.client.delete(`/categories/${id}`);
   }
 
   // Warehouses
   getWarehouses() {
-    return this.client.get("/warehouses")
+    return this.client.get("/warehouses");
   }
 
   createWarehouse(data: any) {
-    return this.client.post("/warehouses", data)
+    return this.client.post("/warehouses", data);
   }
 
   updateWarehouse(id: string, data: any) {
-    return this.client.put(`/warehouses/${id}`, data)
+    return this.client.put(`/warehouses/${id}`, data);
   }
 
   deleteWarehouse(id: string) {
-    return this.client.delete(`/warehouses/${id}`)
+    return this.client.delete(`/warehouses/${id}`);
   }
 
   // Stock
   getStock() {
-    return this.client.get("/stock")
+    return this.client.get("/stock");
   }
 
   getStockByProduct(productId: string) {
-    return this.client.get(`/stock/product/${productId}`)
+    return this.client.get(`/stock/product/${productId}`);
   }
 
   // Receipts
   getReceipts() {
-    return this.client.get("/receipts")
+    return this.client.get("/receipts");
   }
 
   createReceipt(data: any) {
-    return this.client.post("/receipts", data)
+    return this.client.post("/receipts", data);
   }
 
   updateReceipt(id: string, data: any) {
-    return this.client.put(`/receipts/${id}`, data)
+    return this.client.put(`/receipts/${id}`, data);
+  }
+
+  // Transfers
+  getTransfers(status?: string) {
+    return this.client.get("/transfers", { params: { status } });
+  }
+
+  getTransferById(id: string) {
+    return this.client.get(`/transfers/${id}`);
+  }
+
+  createTransfer(data: any) {
+    return this.client.post("/transfers", data);
+  }
+
+  updateTransferStatus(id: string, status: string) {
+    return this.client.patch(`/transfers/${id}/status`, { status });
+  }
+
+  addTransferItem(id: string, item: any) {
+    return this.client.post(`/transfers/${id}/items`, item);
+  }
+
+  processTransfer(id: string) {
+    return this.client.post(`/transfers/${id}/process`);
+  }
+
+  // Warehouses and Locations
+  getLocations(warehouseId?: string) {
+    if (warehouseId) {
+      return this.client.get(`/warehouses/${warehouseId}/locations`);
+    }
+    return this.client.get("/warehouses/locations/all");
   }
 }
 
-export const apiClient = new APIClient()
+export const apiClient = new APIClient();
