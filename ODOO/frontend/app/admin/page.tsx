@@ -29,6 +29,7 @@ import {
 import { InventoryForm } from "@/components/inventory/inventory-form";
 import { ReceiptForm } from "@/components/receipts/receipt-form";
 import { DeliveryForm } from "@/components/deliveries/delivery-form";
+import { WarehouseForm } from "@/components/warehouses/warehouse-form";
 import { hasPermission } from "@/lib/permissions";
 
 export default function AdminPage() {
@@ -57,6 +58,34 @@ export default function AdminPage() {
     totalStockValue: "₹2.5M",
     movements24h: 156,
   });
+
+  // Warehouses state
+  const [warehouses, setWarehouses] = useState([
+    {
+      id: "1",
+      name: "Main Warehouse",
+      location: "Mumbai",
+      capacity: "85%",
+      items: 4520,
+      status: "active",
+    },
+    {
+      id: "2",
+      name: "North Hub",
+      location: "Delhi",
+      capacity: "62%",
+      items: 3210,
+      status: "active",
+    },
+    {
+      id: "3",
+      name: "South Depot",
+      location: "Bangalore",
+      capacity: "78%",
+      items: 2890,
+      status: "active",
+    },
+  ]);
 
   // Inventory state
   const [inventory, setInventory] = useState<InventoryItem[]>([
@@ -201,6 +230,7 @@ export default function AdminPage() {
   const [showInventoryForm, setShowInventoryForm] = useState(false);
   const [showReceiptForm, setShowReceiptForm] = useState(false);
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
+  const [showWarehouseForm, setShowWarehouseForm] = useState(false);
   const [viewingInventoryItem, setViewingInventoryItem] =
     useState<InventoryItem | null>(null);
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
@@ -310,32 +340,16 @@ export default function AdminPage() {
       <div className="card">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">All Warehouses</h2>
-          <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:opacity-90 transition">
+          <button
+            onClick={() => setShowWarehouseForm(true)}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:opacity-90 transition"
+          >
             Add Warehouse
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            {
-              name: "Main Warehouse",
-              location: "Mumbai",
-              capacity: "85%",
-              items: 4520,
-            },
-            {
-              name: "North Hub",
-              location: "Delhi",
-              capacity: "62%",
-              items: 3210,
-            },
-            {
-              name: "South Depot",
-              location: "Bangalore",
-              capacity: "78%",
-              items: 2890,
-            },
-          ].map((warehouse, i) => (
-            <div key={i} className="card hover:shadow-lg transition">
+          {warehouses.map((warehouse) => (
+            <div key={warehouse.id} className="card hover:shadow-lg transition">
               <h3 className="font-bold text-lg mb-2">{warehouse.name}</h3>
               <p className="text-sm text-muted mb-4">{warehouse.location}</p>
               <div className="space-y-2">
@@ -887,6 +901,40 @@ export default function AdminPage() {
           {activeTab === "settings" && renderSettings()}
         </div>
       </main>
+
+      {/* Warehouse Form Modal */}
+      {showWarehouseForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-card rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <WarehouseForm
+              onClose={() => setShowWarehouseForm(false)}
+              onSubmit={(formData) => {
+                // Create new warehouse object
+                const newWarehouse = {
+                  id: (warehouses.length + 1).toString(),
+                  name: formData.name || "",
+                  location: formData.location || "",
+                  capacity: "0%",
+                  items: 0,
+                  status: formData.status || "active",
+                };
+                
+                // Add to warehouses state
+                setWarehouses([...warehouses, newWarehouse]);
+                
+                // Update stats
+                setStats(prev => ({
+                  ...prev,
+                  activeWarehouses: prev.activeWarehouses + 1
+                }));
+                
+                console.log("Warehouse added:", newWarehouse);
+                setShowWarehouseForm(false);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 }
