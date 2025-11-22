@@ -41,14 +41,14 @@ export function SidebarNav() {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 md:hidden bg-card border border-card-border p-2 rounded-md"
+        className="fixed top-4 left-4 z-50 md:hidden bg-card p-2 rounded-md"
       >
         <Menu size={20} />
       </button>
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-card border-r border-card-border transition-transform md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-card transition-transform md:static md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

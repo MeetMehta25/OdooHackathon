@@ -42,7 +42,7 @@ export function TopNav() {
   return (
     <>
       {/* Top Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-card border-b border-card-border">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-card">
         <div className="flex items-center justify-between px-4 py-3 lg:px-6 w-full gap-2 lg:gap-4">
           {/* Logo and Brand */}
           <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">

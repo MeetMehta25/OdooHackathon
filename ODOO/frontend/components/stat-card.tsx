@@ -25,7 +25,7 @@ export function StatCard({ title, value, change, icon, color }: StatCardProps) {
           <p className="text-muted text-sm">{title}</p>
           <p className="text-3xl font-bold mt-1">{value}</p>
         </div>
-        <div className={`text-3xl opacity-20`}>{icon}</div>
+        <div className={`text-3xl opacity-70`}>{icon}</div>
       </div>
       <div className="flex items-center gap-1 text-xs">
         {isPositive ? (

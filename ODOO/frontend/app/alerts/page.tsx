@@ -127,7 +127,7 @@ export default function AlertsPage() {
           {/* Alerts List */}
           <div className="space-y-4">
             {filteredAlerts.map((alert) => (
-              <div key={alert.id} className="card border border-card-border flex items-start justify-between">
+              <div key={alert.id} className="card flex items-start justify-between">
                 <div className="flex gap-4">
                   <div className="pt-1">
                     {alert.read ? (
