@@ -89,7 +89,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+    >
       <div className="w-full max-w-md">
         <div className="card">
           <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">
@@ -187,7 +189,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <p className="mt-6 pt-6 border-t border-card-border text-center text-sm text-muted">
+          <p className="mt-6 pt-6 border-t border-white/20 text-center text-sm text-muted">
             Already have an account?{" "}
             <Link
               href="/login"

@@ -47,7 +47,7 @@ export function DataTable<TData extends { id: string | number }>({
 
       {/* ⭐ Selection Bar */}
       {selectedCount > 0 && (
-        <div className="p-4 border-b border-card-border flex items-center justify-between bg-muted-bg">
+        <div className="p-4 border-b border-white/20 flex items-center justify-between bg-muted-bg">
           <p className="font-medium">{selectedCount} selected</p>
           <Button
             variant="destructive"
@@ -86,7 +86,7 @@ export function DataTable<TData extends { id: string | number }>({
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() ? "selected" : undefined}
-                className="hover:bg-muted-bg border-b border-card-border"
+                className="hover:bg-muted-bg border-b border-white/20"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>

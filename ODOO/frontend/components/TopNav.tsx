@@ -42,7 +42,7 @@ export function TopNav() {
   return (
     <>
       {/* Top Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-card">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
         <div className="flex items-center justify-between px-4 py-3 lg:px-6 w-full gap-2 lg:gap-4">
           {/* Logo and Brand */}
           <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">
@@ -102,7 +102,7 @@ export function TopNav() {
             isOpen ? "max-h-screen" : "max-h-0"
           }`}
         >
-          <div className="px-4 py-4 border-t border-card-border bg-card">
+          <div className="px-4 py-4 border-t border-white/20 glass-nav">
             {/* Mobile Navigation */}
             <nav className="space-y-1">
               {visibleItems.map((item) => {

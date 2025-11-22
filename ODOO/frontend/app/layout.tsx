@@ -38,7 +38,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${_geist.className} font-sans antialiased bg-background text-foreground`}>
+      <body 
+        className={`${_geist.className} font-sans antialiased text-foreground`}
+        style={{
+          backgroundImage: 'url(/login_bg2.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
+          minHeight: '100vh',
+        }}
+      >
         <AuthProvider>
           {children}
         </AuthProvider>

@@ -62,7 +62,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+    >
       <div className="w-full max-w-md">
         <div className="card">
           <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">
@@ -112,7 +114,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-card-border space-y-2 text-center text-sm">
+          <div className="mt-6 pt-6 border-t border-white/20 space-y-2 text-center text-sm">
             <p className="text-muted">
               Don't have an account?{" "}
               <Link

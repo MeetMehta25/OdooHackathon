@@ -57,19 +57,21 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+    >
       <div className="w-full max-w-md">
-        <div className="card">
+        <div className="card glass-card">
           <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">Reset Password</h1>
           <p className="text-muted mb-8">Enter your email to receive an OTP</p>
 
           <form onSubmit={step === "email" ? handleSendOTP : handleVerifyOTP} className="space-y-4">
             {error && (
-              <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm">{error}</div>
+              <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm backdrop-blur-sm">{error}</div>
             )}
 
             {success && (
-              <div className="bg-success/10 border border-success text-success px-4 py-2 rounded-md text-sm">
+              <div className="bg-success/10 border border-success text-success px-4 py-2 rounded-md text-sm backdrop-blur-sm">
                 {success}
               </div>
             )}
@@ -131,7 +133,7 @@ export default function ForgotPasswordPage() {
             </button>
           </form>
 
-          <p className="mt-6 pt-6 border-t border-card-border text-center text-sm text-muted">
+          <p className="mt-6 pt-6 border-t border-white/20 text-center text-sm text-muted">
             <Link href="/login" className="text-primary hover:text-primary-light">
               Back to login
             </Link>

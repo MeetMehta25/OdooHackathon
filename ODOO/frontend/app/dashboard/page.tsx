@@ -88,7 +88,7 @@ export default function DashboardPage() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between py-3 border-b border-card-border last:border-0"
+                    className="flex items-center justify-between py-3 border-b border-white/20 last:border-0"
                   >
                     <div>
                       <p className="font-medium">{item.category}</p>
