@@ -13,15 +13,15 @@ export default function Home() {
         <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
           A modular Inventory Management System that replaces manual registers,
           spreadsheets, and scattered tracking with a centralized, real-time stock
-          control platform. Designed for inventory managers and warehouse staff to
-          handle receiving, dispatching, transfers, and accurate counting.
+          control platform. Manage products like Samsung Galaxy phones, Apple MacBooks,
+          and warehouse locations from Mumbai to Delhi with precision and ease.
         </p>
 
         <ol className="list-decimal list-inside text-left text-gray-700 dark:text-gray-300 space-y-2">
-          <li>Track incoming and outgoing stock with accuracy.</li>
-          <li>Manage warehouse transfers and daily operations.</li>
-          <li>Maintain real-time inventory visibility across locations.</li>
-          <li>Reduce human errors and streamline workflows.</li>
+          <li>Track Samsung phones, laptops, and electronics across Mumbai warehouse.</li>
+          <li>Manage transfers between Mumbai and Delhi warehouses seamlessly.</li>
+          <li>Monitor real-time stock levels for all products and locations.</li>
+          <li>Automate inventory counting and reduce manual errors by 95%.</li>
         </ol>
 
         <Link

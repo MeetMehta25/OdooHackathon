@@ -18,24 +18,24 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([
     {
       id: 1,
-      name: "Widget Pro",
-      sku: "SKU-001",
+      name: "Samsung Galaxy S24",
+      sku: "SAM-GAL-S24",
       category: "electronics",
       stock: 245,
       value: "₹2.45L",
       status: "in-stock",
     },
-    { id: 2, name: "Gadget X", sku: "SKU-002", category: "electronics", stock: 8, value: "₹1.20L", status: "low" },
+    { id: 2, name: "Apple iPhone 15 Pro", sku: "APP-IPH-15P", category: "electronics", stock: 8, value: "₹1.20L", status: "low" },
     {
       id: 3,
-      name: "Raw Material A",
-      sku: "SKU-003",
-      category: "raw",
-      stock: 1205,
+      name: "MacBook Pro M3",
+      sku: "APP-MBP-M3",
+      category: "electronics",
+      stock: 45,
       value: "₹8.45L",
       status: "in-stock",
     },
-    { id: 4, name: "Finished Prod B", sku: "SKU-004", category: "finished", stock: 0, value: "₹0", status: "out" },
+    { id: 4, name: "Samsung Galaxy Tab", sku: "SAM-TAB-S9", category: "electronics", stock: 0, value: "₹0", status: "out" },
   ])
 
   const [showForm, setShowForm] = useState(false)

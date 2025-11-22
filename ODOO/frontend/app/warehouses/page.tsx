@@ -11,20 +11,20 @@ export default function WarehousesPage() {
   const [warehouses, setWarehouses] = useState<Warehouse[]>([
     {
       id: "1",
-      name: "Main Warehouse",
-      location: "Mumbai, India",
+      name: "Mumbai Central Warehouse",
+      location: "Mumbai, Maharashtra, India",
       status: "active",
       locations: [
-        { id: "L1", name: "Shelf A1", code: "A1", capacity: 500 },
-        { id: "L2", name: "Shelf A2", code: "A2", capacity: 750 },
+        { id: "L1", name: "Electronics Section A1", code: "A1", capacity: 500 },
+        { id: "L2", name: "Mobile Phones Section A2", code: "A2", capacity: 750 },
       ],
     },
     {
       id: "2",
-      name: "Secondary Hub",
-      location: "Delhi, India",
+      name: "Delhi Distribution Hub",
+      location: "Delhi, NCR, India",
       status: "active",
-      locations: [{ id: "L3", name: "Shelf B1", code: "B1", capacity: 600 }],
+      locations: [{ id: "L3", name: "Laptops Section B1", code: "B1", capacity: 600 }],
     },
   ])
 

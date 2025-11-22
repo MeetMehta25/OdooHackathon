@@ -19,7 +19,7 @@ export default function ReceiptsPage() {
     {
       id: "1",
       number: "REC-2024-001",
-      supplier: "ABC Suppliers",
+      supplier: "Samsung India, Mumbai",
       status: "done",
       expectedDate: "2024-12-15",
       items: 5,
@@ -28,7 +28,7 @@ export default function ReceiptsPage() {
     {
       id: "2",
       number: "REC-2024-002",
-      supplier: "XYZ Corp",
+      supplier: "Apple India, Delhi",
       status: "ready",
       expectedDate: "2024-12-18",
       items: 3,
@@ -37,7 +37,7 @@ export default function ReceiptsPage() {
     {
       id: "3",
       number: "REC-2024-003",
-      supplier: "Global Supply",
+      supplier: "HP India, Bangalore",
       status: "pending",
       expectedDate: "2024-12-20",
       items: 8,

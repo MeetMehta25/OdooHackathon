@@ -20,7 +20,7 @@ export default function DeliveriesPage() {
     {
       id: "1",
       number: "DEL-2024-001",
-      customer: "Customer A Ltd",
+      customer: "Reliance Digital, Delhi",
       status: "done",
       expectedDate: "2024-12-15",
       items: 4,
@@ -29,7 +29,7 @@ export default function DeliveriesPage() {
     {
       id: "2",
       number: "DEL-2024-002",
-      customer: "Business Corp",
+      customer: "Croma Electronics, Mumbai",
       status: "ready",
       expectedDate: "2024-12-17",
       items: 6,
@@ -38,7 +38,7 @@ export default function DeliveriesPage() {
     {
       id: "3",
       number: "DEL-2024-003",
-      customer: "Retail Store",
+      customer: "Vijay Sales, Pune",
       status: "pending",
       expectedDate: "2024-12-19",
       items: 2,

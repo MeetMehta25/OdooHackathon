@@ -81,10 +81,10 @@ export default function DashboardPage() {
               <h2 className="text-xl font-bold mb-4">Inventory Summary</h2>
               <div className="space-y-4">
                 {[
-                  { category: "Electronics", count: 456, value: "₹85.2L" },
-                  { category: "Raw Materials", count: 789, value: "₹42.5L" },
-                  { category: "Finished Goods", count: "234", value: "₹120.8L" },
-                  { category: "Packaging", count: "155", value: "₹12.3L" },
+                  { category: "Samsung Phones", count: 456, value: "₹85.2L" },
+                  { category: "Apple Products", count: 789, value: "₹42.5L" },
+                  { category: "Laptops & Electronics", count: "234", value: "₹120.8L" },
+                  { category: "Accessories", count: "155", value: "₹12.3L" },
                 ].map((item, i) => (
                   <div
                     key={i}

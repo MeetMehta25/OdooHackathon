@@ -2,9 +2,9 @@ import { AlertCircle, CheckCircle } from "lucide-react"
 
 export function AlertsList() {
   const alerts = [
-    { id: 1, product: "SKU-001", message: "Low stock", severity: "high" },
-    { id: 2, product: "SKU-045", message: "Expiring soon", severity: "medium" },
-    { id: 3, product: "SKU-089", message: "In stock", severity: "low" },
+    { id: 1, product: "Samsung Galaxy S24", message: "Low stock - Only 12 units left in Mumbai", severity: "high" },
+    { id: 2, product: "Apple iPhone 15 Pro", message: "Stock replenished in Delhi warehouse", severity: "medium" },
+    { id: 3, product: "MacBook Pro M3", message: "In stock - 45 units available", severity: "low" },
   ]
 
   return (

@@ -20,8 +20,8 @@ export default function AlertsPage() {
     {
       id: "1",
       type: "low-stock",
-      product: "Widget Pro (SKU-001)",
-      warehouse: "Main WH",
+      product: "Samsung Galaxy S24 (SAM-GAL-S24)",
+      warehouse: "Mumbai Warehouse",
       currentStock: 12,
       reorderLevel: 50,
       read: false,
@@ -30,8 +30,8 @@ export default function AlertsPage() {
     {
       id: "2",
       type: "out-of-stock",
-      product: "Component Y (SKU-003)",
-      warehouse: "Secondary WH",
+      product: "MacBook Pro M3 (APP-MBP-M3)",
+      warehouse: "Delhi Warehouse",
       currentStock: 0,
       reorderLevel: 100,
       read: false,
@@ -40,8 +40,8 @@ export default function AlertsPage() {
     {
       id: "3",
       type: "overstock",
-      product: "Raw Material A (SKU-003)",
-      warehouse: "Main WH",
+      product: "Apple iPhone 15 Pro (APP-IPH-15P)",
+      warehouse: "Mumbai Warehouse",
       currentStock: 2500,
       reorderLevel: 1000,
       read: true,

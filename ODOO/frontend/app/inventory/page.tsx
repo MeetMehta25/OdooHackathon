@@ -16,9 +16,9 @@ export default function InventoryPage() {
   const [inventory, setInventory] = useState<InventoryItem[]>([
     {
       id: "1",
-      product: "Widget Pro",
-      sku: "SKU-001",
-      warehouse: "Main WH",
+      product: "Samsung Galaxy S24",
+      sku: "SAM-GAL-S24",
+      warehouse: "Mumbai Warehouse",
       location: "A1",
       quantity: 245,
       reorderLevel: 50,
@@ -27,9 +27,9 @@ export default function InventoryPage() {
     },
     {
       id: "2",
-      product: "Gadget X",
-      sku: "SKU-002",
-      warehouse: "Main WH",
+      product: "Apple iPhone 15 Pro",
+      sku: "APP-IPH-15P",
+      warehouse: "Mumbai Warehouse",
       location: "A2",
       quantity: 12,
       reorderLevel: 50,
@@ -38,9 +38,9 @@ export default function InventoryPage() {
     },
     {
       id: "3",
-      product: "Component Y",
-      sku: "SKU-003",
-      warehouse: "Secondary",
+      product: "MacBook Pro M3",
+      sku: "APP-MBP-M3",
+      warehouse: "Delhi Warehouse",
       location: "B1",
       quantity: 0,
       reorderLevel: 100,
