@@ -6,10 +6,10 @@ import { Plus, Search } from "lucide-react"
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([
-    { id: 1, name: "Electronics", productCount: 156, description: "Electronic items and gadgets" },
-    { id: 2, name: "Raw Materials", productCount: 234, description: "Raw materials for production" },
-    { id: 3, name: "Finished Goods", productCount: 89, description: "Ready to sell products" },
-    { id: 4, name: "Packaging", productCount: 45, description: "Packaging materials" },
+    { id: 1, name: "Samsung Phones", productCount: 156, description: "Samsung Galaxy series smartphones" },
+    { id: 2, name: "Apple Products", productCount: 234, description: "iPhones, MacBooks, and Apple accessories" },
+    { id: 3, name: "Laptops & Electronics", productCount: 89, description: "Laptops, tablets, and electronic devices" },
+    { id: 4, name: "Mobile Accessories", productCount: 45, description: "Cases, chargers, and phone accessories" },
   ])
 
   const [newCategory, setNewCategory] = useState("")
@@ -96,7 +96,7 @@ export default function CategoriesPage() {
               <div key={category.id} className="card hover:border-primary transition-colors">
                 <h3 className="text-lg font-bold mb-2">{category.name}</h3>
                 <p className="text-sm text-muted mb-4">{category.description}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-card-border">
+                <div className="flex items-center justify-between pt-4 border-t border-white/20">
                   <span className="text-sm text-muted">{category.productCount} products</span>
                   <div className="flex gap-2">
                     <button className="text-sm text-primary hover:text-primary-light">Edit</button>

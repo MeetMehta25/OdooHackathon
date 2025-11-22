@@ -19,8 +19,8 @@ export default function AdjustmentsPage() {
   const [adjustments] = useState<Adjustment[]>([
     {
       id: "1",
-      product: "Widget Pro (SKU-001)",
-      warehouse: "Main WH - A1",
+      product: "Samsung Galaxy S24 (SAM-GAL-S24)",
+      warehouse: "Mumbai Warehouse - A1",
       reason: "counting",
       previousQty: 250,
       countedQty: 245,
@@ -29,8 +29,8 @@ export default function AdjustmentsPage() {
     },
     {
       id: "2",
-      product: "Gadget X (SKU-002)",
-      warehouse: "Main WH - A2",
+      product: "Apple iPhone 15 Pro (APP-IPH-15P)",
+      warehouse: "Mumbai Warehouse - A2",
       reason: "damage",
       previousQty: 50,
       countedQty: 45,

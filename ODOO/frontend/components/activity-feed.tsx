@@ -2,13 +2,13 @@ import { Package, Truck, TrendingUp, CheckCircle } from "lucide-react"
 
 export function ActivityFeed() {
   const activities = [
-    { id: 1, type: "receipt", title: "Stock received", desc: "From supplier ABC Corp", time: "2h ago", icon: Package },
-    { id: 2, type: "delivery", title: "Order shipped", desc: "To customer XYZ Ltd", time: "4h ago", icon: Truck },
+    { id: 1, type: "receipt", title: "Stock received", desc: "Samsung Galaxy S24 from Samsung India, Mumbai", time: "2h ago", icon: Package },
+    { id: 2, type: "delivery", title: "Order shipped", desc: "Apple iPhone 15 Pro to Reliance Digital, Delhi", time: "4h ago", icon: Truck },
     {
       id: 3,
       type: "adjustment",
       title: "Stock adjusted",
-      desc: "Warehouse A - Loc B1",
+      desc: "MacBook Pro M3 - Mumbai Warehouse, Section A1",
       time: "6h ago",
       icon: TrendingUp,
     },
@@ -16,7 +16,7 @@ export function ActivityFeed() {
       id: 4,
       type: "completion",
       title: "Transfer complete",
-      desc: "From WH-A to WH-B",
+      desc: "Samsung phones from Mumbai to Delhi warehouse",
       time: "8h ago",
       icon: CheckCircle,
     },
