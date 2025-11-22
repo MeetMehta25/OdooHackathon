@@ -41,25 +41,25 @@ export function SidebarNav() {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 md:hidden bg-card p-2 rounded-md"
+        className="fixed top-4 left-4 z-50 md:hidden glass-nav p-2 rounded-md"
       >
         <Menu size={20} />
       </button>
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-card transition-transform md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 w-64 glass-nav transition-transform md:static md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-6 border-b border-card-border">
+          <div className="p-6 border-b border-white/20">
             <h1 className="text-2xl font-bold text-primary">StockMaster</h1>
           </div>
 
           {/* User Info */}
-          <div className="px-6 py-4 border-b border-card-border">
+          <div className="px-6 py-4 border-b border-white/20">
             <p className="text-sm font-medium text-foreground">{user?.name}</p>
             <p className="text-xs text-muted capitalize">{user?.role.replace("_", " ")}</p>
           </div>
@@ -86,7 +86,7 @@ export function SidebarNav() {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-card-border space-y-2">
+          <div className="p-4 border-t border-white/20 space-y-2">
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 w-full px-4 py-2 rounded-md text-foreground hover:bg-muted-bg transition-colors"

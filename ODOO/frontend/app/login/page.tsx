@@ -83,14 +83,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+    >
       <div className="w-full max-w-md">
-        <div className="card">
+        <div className="card glass-card">
           <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">Welcome to StockMaster</h1>
           <p className="text-muted mb-8">Manage your inventory with precision</p>
           
-          <div className="mb-4 space-y-3">
-            <div className="p-3 bg-info/10 border border-info/20 rounded-md text-sm">
+            <div className="mb-4 space-y-3">
+            <div className="p-3 bg-info/10 border border-info/20 rounded-md text-sm backdrop-blur-sm">
               <p className="font-medium text-info mb-2">Test Credentials:</p>
               <div className="space-y-1">
                 <div>
@@ -111,7 +113,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
-              <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm">{error}</div>
+              <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm backdrop-blur-sm">{error}</div>
             )}
 
             <div>
@@ -143,7 +145,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-card-border space-y-2 text-center text-sm">
+          <div className="mt-6 pt-6 border-t border-white/20 space-y-2 text-center text-sm">
             <p className="text-muted">
               Don't have an account?{" "}
               <Link href="/register" className="text-primary hover:text-primary-light">

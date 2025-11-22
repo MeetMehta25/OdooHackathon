@@ -5,13 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 sm:p-20">
       <main className="flex flex-col items-center gap-10 text-center max-w-2xl">
-        <Image
-          src="/logo.svg"
-          alt="StockMaster logo"
-          width={120}
-          height={120}
-        />
-
+        
         <h1 className="text-4xl font-bold tracking-tight">
           Welcome to StockMaster
         </h1>

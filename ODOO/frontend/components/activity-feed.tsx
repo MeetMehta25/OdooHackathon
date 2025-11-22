@@ -31,7 +31,7 @@ export function ActivityFeed() {
           return (
             <div
               key={activity.id}
-              className="flex items-start gap-4 pb-4 border-b border-card-border last:pb-0 last:border-0"
+              className="flex items-start gap-4 pb-4 border-b border-white/20 last:pb-0 last:border-0"
             >
               <div className="p-2 bg-muted-bg rounded-lg flex-shrink-0">
                 <Icon size={20} className="text-primary" />

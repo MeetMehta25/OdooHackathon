@@ -50,7 +50,7 @@ export function ProductList({ searchQuery, category }: ProductListProps) {
     <div className="card overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-card-border">
+          <tr className="border-b border-white/20">
             <th className="text-left py-3 px-4 font-semibold text-sm">Product</th>
             <th className="text-left py-3 px-4 font-semibold text-sm">SKU</th>
             <th className="text-left py-3 px-4 font-semibold text-sm">Category</th>
@@ -62,7 +62,7 @@ export function ProductList({ searchQuery, category }: ProductListProps) {
         </thead>
         <tbody>
           {filteredProducts.map((product) => (
-            <tr key={product.id} className="border-b border-card-border hover:bg-muted-bg transition-colors">
+            <tr key={product.id} className="border-b border-white/20 hover:bg-muted-bg transition-colors">
               <td className="py-4 px-4">{product.name}</td>
               <td className="py-4 px-4 text-muted">{product.sku}</td>
               <td className="py-4 px-4 text-sm text-muted capitalize">{product.category}</td>
