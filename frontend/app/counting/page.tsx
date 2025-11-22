@@ -143,7 +143,7 @@ export default function CountingPage() {
 
   return (
     <RoleGuard page="/counting">
-      <div>
+      <>
         <TopNav />
         <main className="p-4 md:p-8">
           <div className="container mx-auto px-4 md:px-8 max-w-7xl">
@@ -200,7 +200,7 @@ export default function CountingPage() {
             />
           </div>
         </main>
-      </div>
+      </>
     </RoleGuard>
   )
 }

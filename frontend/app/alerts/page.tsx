@@ -52,7 +52,7 @@ export default function AlertsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [filterRead, setFilterRead] = useState("unread")
 
-  const typeColors = {
+  const typeColors: Record<string, string> = {
     "low-stock": "text-warning",
     "out-of-stock": "text-error",
     expiring: "text-error",
@@ -94,13 +94,13 @@ export default function AlertsPage() {
           {/* Alert Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
             {[
-              { label: "Unread Alerts", value: alerts.filter((a) => !a.read).length, color: "error" },
-              { label: "Low Stock", value: alerts.filter((a) => a.type === "low-stock").length, color: "warning" },
-              { label: "Out of Stock", value: alerts.filter((a) => a.type === "out-of-stock").length, color: "error" },
+              { label: "Unread Alerts", value: alerts.filter((a) => !a.read).length, colorClass: "text-error" },
+              { label: "Low Stock", value: alerts.filter((a) => a.type === "low-stock").length, colorClass: "text-warning" },
+              { label: "Out of Stock", value: alerts.filter((a) => a.type === "out-of-stock").length, colorClass: "text-error" },
             ].map((stat, i) => (
               <div key={i} className="card">
                 <p className="text-muted text-sm">{stat.label}</p>
-                <p className={`text-3xl font-bold mt-2 text-${stat.color}`}>{stat.value}</p>
+                <p className={`text-3xl font-bold mt-2 ${stat.colorClass}`}>{stat.value}</p>
               </div>
             ))}
           </div>
@@ -133,14 +133,22 @@ export default function AlertsPage() {
                     {alert.read ? (
                       <CheckCircle size={24} className="text-success" />
                     ) : (
-                      <AlertCircle size={24} className={`text-${typeColors[alert.type as keyof typeof typeColors]}`} />
+                      <AlertCircle size={24} className={typeColors[alert.type] || "text-info"} />
                     )}
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-bold">{alert.product}</h3>
                       <span
-                        className={`px-2 py-0.5 rounded text-xs font-medium bg-${alert.type === "out-of-stock" ? "error" : "warning"}/10 text-${alert.type === "out-of-stock" ? "error" : "warning"}`}
+                        className={`px-2 py-0.5 rounded text-xs font-medium ${
+                          alert.type === "out-of-stock"
+                            ? "bg-error/10 text-error"
+                            : alert.type === "low-stock"
+                            ? "bg-warning/10 text-warning"
+                            : alert.type === "overstock"
+                            ? "bg-info/10 text-info"
+                            : "bg-error/10 text-error"
+                        }`}
                       >
                         {typeLabels[alert.type as keyof typeof typeLabels]}
                       </span>

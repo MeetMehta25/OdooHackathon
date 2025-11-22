@@ -34,6 +34,7 @@ export default function LoginPage() {
         const mockToken = "mock-jwt-token-" + Date.now()
         setAuth(mockUser, mockToken)
         router.push("/dashboard")
+        setLoading(false)
         return
       }
 
@@ -49,20 +50,33 @@ export default function LoginPage() {
         const mockToken = "mock-jwt-token-warehouse-" + Date.now()
         setAuth(mockUser, mockToken)
         router.push("/dashboard")
+        setLoading(false)
+        return
+      }
+
+      // Mock login for testing - manager/manager (inventory manager)
+      if (email.toLowerCase() === "manager" && password === "manager") {
+        const mockUser = {
+          id: "3",
+          email: "manager@stockmaster.com",
+          name: "Inventory Manager",
+          role: "inventory_manager" as const,
+          createdAt: new Date().toISOString(),
+        }
+        const mockToken = "mock-jwt-token-manager-" + Date.now()
+        setAuth(mockUser, mockToken)
+        router.push("/dashboard")
+        setLoading(false)
         return
       }
 
       // Try API login for other users
-      try {
-        const response = await apiClient.login(email, password)
-        const { token, user } = response.data
-        setAuth(user, token)
-        router.push("/dashboard")
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Login failed. Try admin/admin or warehouse/warehouse for testing.")
-      }
+      const response = await apiClient.login(email, password)
+      const { token, user } = response.data
+      setAuth(user, token)
+      router.push("/dashboard")
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed")
+      setError(err.response?.data?.message || "Login failed. Try admin/admin, warehouse/warehouse, or manager/manager for testing.")
     } finally {
       setLoading(false)
     }
@@ -86,6 +100,10 @@ export default function LoginPage() {
                 <div className="pt-2 border-t border-info/20">
                   <p className="text-muted text-xs mb-1">Warehouse Staff (Limited Access):</p>
                   <p className="text-muted">Username: <span className="font-mono">warehouse</span> | Password: <span className="font-mono">warehouse</span></p>
+                </div>
+                <div className="pt-2 border-t border-info/20">
+                  <p className="text-muted text-xs mb-1">Inventory Manager (Management Access):</p>
+                  <p className="text-muted">Username: <span className="font-mono">manager</span> | Password: <span className="font-mono">manager</span></p>
                 </div>
               </div>
             </div>

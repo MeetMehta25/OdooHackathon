@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { SidebarNav } from "@/components/sidebar-nav"
+import { TopNav } from "@/components/TopNav"
 import { Plus, Search, Edit2, Trash2, Shield } from "lucide-react"
 
 interface User {
@@ -57,10 +57,10 @@ export default function UsersPage() {
   )
 
   return (
-    <div className="flex min-h-screen">
-      <SidebarNav />
-      <main className="flex-1">
-        <div className="p-4 md:p-8">
+    <>
+      <TopNav />
+      <main className="p-4 md:p-8">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
             <div>
@@ -171,6 +171,6 @@ export default function UsersPage() {
           </div>
         </div>
       </main>
-    </div>
+    </>
   )
 }

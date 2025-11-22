@@ -43,13 +43,15 @@ export function TopNav() {
     <>
       {/* Top Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-card border-b border-card-border">
-        <div className="flex items-center justify-between px-4 py-3 lg:px-6">
+        <div className="flex items-center justify-between px-4 py-3 lg:px-6 w-full gap-2 lg:gap-4">
           {/* Logo and Brand */}
-          <div className="flex items-center gap-8">
-            <h1 className="text-xl lg:text-2xl font-bold text-primary">StockMaster</h1>
-            
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+          <div className="flex items-center gap-3 lg:gap-4 flex-shrink-0">
+            <h1 className="text-lg lg:text-xl xl:text-2xl font-bold text-primary whitespace-nowrap">StockMaster</h1>
+          </div>
+          
+          {/* Desktop Navigation - Scrollable */}
+          <nav className="hidden lg:flex items-center gap-1 overflow-x-auto scrollbar-hide flex-1 min-w-0 mx-2">
+            <div className="flex items-center gap-1">
               {visibleItems.map((item) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href
@@ -58,30 +60,27 @@ export function TopNav() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
+                    className={`flex items-center gap-1.5 px-2.5 py-2 rounded-md transition-colors text-sm font-medium whitespace-nowrap flex-shrink-0 ${
                       isActive ? "bg-primary text-white" : "text-foreground hover:bg-muted-bg"
                     }`}
                   >
-                    <Icon size={18} />
+                    <Icon size={16} className="flex-shrink-0" />
                     <span>{item.label}</span>
                   </Link>
                 )
               })}
-            </nav>
-          </div>
+            </div>
+          </nav>
 
-          {/* Right Side - User Info & Logout (Desktop) */}
+          {/* Right Side - Logout (Desktop) */}
           {user && (
-            <div className="hidden lg:flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm font-medium text-foreground">{user.name}</p>
-                <p className="text-xs text-muted capitalize">{user.role.replace("_", " ")}</p>
-              </div>
+            <div className="hidden lg:flex items-center flex-shrink-0">
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 rounded-md text-foreground hover:bg-muted-bg transition-colors"
+                className="flex items-center gap-1.5 px-2.5 lg:px-3 py-2 rounded-md text-foreground hover:bg-muted-bg transition-colors whitespace-nowrap flex-shrink-0"
+                title="Logout"
               >
-                <LogOut size={18} />
+                <LogOut size={18} className="flex-shrink-0" />
                 <span className="text-sm font-medium">Logout</span>
               </button>
             </div>
@@ -90,7 +89,8 @@ export function TopNav() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-md hover:bg-muted-bg"
+            className="lg:hidden p-2 rounded-md hover:bg-muted-bg flex-shrink-0"
+            aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -103,14 +103,6 @@ export function TopNav() {
           }`}
         >
           <div className="px-4 py-4 border-t border-card-border bg-card">
-            {/* User Info Mobile */}
-            {user && (
-              <div className="px-3 py-2 mb-3 border-b border-card-border">
-                <p className="text-sm font-medium text-foreground">{user.name}</p>
-                <p className="text-xs text-muted capitalize">{user.role.replace("_", " ")}</p>
-              </div>
-            )}
-
             {/* Mobile Navigation */}
             <nav className="space-y-1">
               {visibleItems.map((item) => {
@@ -146,7 +138,7 @@ export function TopNav() {
       </nav>
 
       {/* Spacer to prevent content from hiding under fixed navbar */}
-      <div className="h-[57px] lg:h-[61px]" />
+      <div className="h-[57px] lg:h-[57px]" />
     </>
   )
 }
