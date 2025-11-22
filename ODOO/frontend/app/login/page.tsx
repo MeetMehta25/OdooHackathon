@@ -98,14 +98,6 @@ export default function LoginPage() {
       className="min-h-screen flex items-center justify-center p-4 relative"
     >
       <div className="w-full max-w-md">
-<<<<<<< HEAD
-        <div className="card glass-card">
-          <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">Welcome to StockMaster</h1>
-          <p className="text-muted mb-8">Manage your inventory with precision</p>
-          
-            <div className="mb-4 space-y-3">
-            <div className="p-3 bg-info/10 border border-info/20 rounded-md text-sm backdrop-blur-sm">
-=======
         <div className="card">
           <h1 className="text-3xl font-bold mb-2 text-foreground text-balance">
             Welcome to StockMaster
@@ -116,7 +108,6 @@ export default function LoginPage() {
 
           <div className="mb-4 space-y-3">
             <div className="p-3 bg-info/10 border border-info/20 rounded-md text-sm">
->>>>>>> 3bf3d6847e77c1b28f79bf8ef8e9a040ff4be9a9
               <p className="font-medium text-info mb-2">Test Credentials:</p>
               <div className="space-y-1">
                 <div>
@@ -152,13 +143,9 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             {error && (
-<<<<<<< HEAD
-              <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm backdrop-blur-sm">{error}</div>
-=======
               <div className="bg-error/10 border border-error text-error px-4 py-2 rounded-md text-sm">
                 {error}
               </div>
->>>>>>> 3bf3d6847e77c1b28f79bf8ef8e9a040ff4be9a9
             )}
 
             <div>
