@@ -168,6 +168,50 @@ class APIClient {
     }
     return this.client.get("/warehouses/locations/all");
   }
+
+  // Deliveries
+  getDeliveries(status?: string, warehouseId?: string) {
+    return this.client.get("/deliveries", {
+      params: { status, warehouse_id: warehouseId },
+    });
+  }
+
+  getDeliveryById(id: string) {
+    return this.client.get(`/deliveries/${id}`);
+  }
+
+  createDelivery(data: any) {
+    return this.client.post("/deliveries", data);
+  }
+
+  updateDeliveryStatus(id: string, status: string) {
+    return this.client.patch(`/deliveries/${id}/status`, { status });
+  }
+
+  addDeliveryItem(id: string, item: any) {
+    return this.client.post(`/deliveries/${id}/items`, item);
+  }
+
+  // Adjustments (Stock Counting)
+  getAdjustments(productId?: string, locationId?: string) {
+    return this.client.get("/adjustments", {
+      params: { product_id: productId, location_id: locationId },
+    });
+  }
+
+  getAdjustmentById(id: string) {
+    return this.client.get(`/adjustments/${id}`);
+  }
+
+  createAdjustment(data: {
+    product_id: string;
+    location_id: string;
+    counted_quantity: number;
+    previous_quantity: number;
+    reason: string;
+  }) {
+    return this.client.post("/adjustments", data);
+  }
 }
 
 export const apiClient = new APIClient();
